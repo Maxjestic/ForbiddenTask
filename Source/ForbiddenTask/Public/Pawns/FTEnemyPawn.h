@@ -16,6 +16,8 @@ class FORBIDDENTASK_API AFTEnemyPawn : public AFTBasePawn, public IFTConsumable
 	GENERATED_BODY()
 
 public:
+	AFTEnemyPawn();
+	
 	virtual void AttemptToConsume_Implementation(AFTPlayerPawn* PlayerPawn) override;
 	
 protected:

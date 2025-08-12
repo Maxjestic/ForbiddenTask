@@ -3,7 +3,13 @@
 
 #include "Pawns/FTEnemyPawn.h"
 
+#include "Components/SphereComponent.h"
 #include "Pawns/FTPlayerPawn.h"
+
+AFTEnemyPawn::AFTEnemyPawn()
+{
+	SphereCollider->SetCollisionProfileName( "Enemy" );
+}
 
 void AFTEnemyPawn::AttemptToConsume_Implementation( AFTPlayerPawn* PlayerPawn )
 {

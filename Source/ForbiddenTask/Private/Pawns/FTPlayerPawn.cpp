@@ -4,12 +4,16 @@
 #include "Pawns/FTPlayerPawn.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Interfaces/FTConsumable.h"
 
 AFTPlayerPawn::AFTPlayerPawn()
 {
-	SphereMesh->OnComponentBeginOverlap.AddDynamic( this, &AFTPlayerPawn::OnOverlapBegin );
+	SphereCollider->SetCollisionProfileName( "Player" );
+	SphereCollider->OnComponentBeginOverlap.AddDynamic( this, &AFTPlayerPawn::OnOverlapBegin );
+
+	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>( TEXT("SpringArm") );
 	SpringArm->SetupAttachment( RootComponent );
@@ -52,7 +56,7 @@ void AFTPlayerPawn::ChangeStats( const float& SpeedChange, const float& Strength
 	Strength += StrengthChange;
 	//TODO: Handle case if either of stats is less than zero
 	
-	SphereMesh->SetWorldScale3D( FVector( Strength ) );
+	UpdateSize();
 }
 
 void AFTPlayerPawn::OnOverlapBegin( UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

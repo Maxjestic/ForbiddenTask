@@ -48,6 +48,7 @@ public:
 	 * @param SpeedChange Value will be added to the Speed value. Can be negative.
 	 * @param StrengthChange Value will be added to the Strength value. Can be negative.
 	 */
+	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void ChangeStats( const float& SpeedChange, const float& StrengthChange );
 
 protected:
