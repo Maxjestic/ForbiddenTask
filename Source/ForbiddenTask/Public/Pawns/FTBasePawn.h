@@ -16,10 +16,12 @@ class FORBIDDENTASK_API AFTBasePawn : public APawn
 
 public:
 	AFTBasePawn();
-	
+
 	virtual void Tick( float DeltaTime ) override;
 
-	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
+	virtual void SetupPlayerInputComponent( UInputComponent* PlayerInputComponent ) override;
+
+	FORCEINLINE float GetStrength() const { return Strength; };
 
 protected:
 	virtual void BeginPlay() override;
@@ -28,8 +30,9 @@ protected:
 	TObjectPtr<UStaticMeshComponent> SphereMesh;
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
-	float Speed = 500.0f;
+	float Strength = 500.0f;
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
-	float Strength = 500.0f;
+	float Speed = 500.0f;
+	
 };

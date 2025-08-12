@@ -7,28 +7,25 @@ AFTBasePawn::AFTBasePawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
-	SetRootComponent(SphereMesh);
+	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "SphereMesh" ) );
+	SetRootComponent( SphereMesh );
 
-	SphereMesh->SetSimulatePhysics(true);
-	SphereMesh->SetLinearDamping(2.0f);
+	SphereMesh->SetSimulatePhysics( true );
+	SphereMesh->SetLinearDamping( 2.0f );
+	SphereMesh->SetEnableGravity( false );
 }
 
 void AFTBasePawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-void AFTBasePawn::Tick(float DeltaTime)
+void AFTBasePawn::Tick( float DeltaTime )
 {
-	Super::Tick(DeltaTime);
-
+	Super::Tick( DeltaTime );
 }
 
-void AFTBasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AFTBasePawn::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	Super::SetupPlayerInputComponent( PlayerInputComponent );
 }
-
