@@ -36,10 +36,10 @@ protected:
 	void OnMoveCompleted();
 	//~ End Handling Input
 
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input" )
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input" )
 	TObjectPtr<UInputMappingContext> DefaultInputMappingContext;
 
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input|Actions" )
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input|Actions" )
 	TObjectPtr<UInputAction> MoveAction;
 
 private:

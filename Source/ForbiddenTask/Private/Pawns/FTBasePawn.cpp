@@ -14,7 +14,7 @@ AFTBasePawn::AFTBasePawn()
 	SphereCollider->SetSimulatePhysics( true );
 	SphereCollider->SetLinearDamping( 2.0f );
 	SphereCollider->SetEnableGravity( false );
-	
+
 	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>( TEXT( "SphereMesh" ) );
 	SphereMesh->SetupAttachment( RootComponent );
 	SphereMesh->SetCollisionEnabled( ECollisionEnabled::NoCollision );
@@ -24,6 +24,11 @@ void AFTBasePawn::OnConstruction( const FTransform& Transform )
 {
 	Super::OnConstruction( Transform );
 	UpdateSize();
+}
+
+void AFTBasePawn::HandleMovement( const FVector& MoveDirection )
+{
+	SphereCollider->AddForce( MoveDirection * (Speed / Strength) * SpeedCoefficient  );
 }
 
 void AFTBasePawn::BeginPlay()
@@ -43,11 +48,11 @@ void AFTBasePawn::SetupPlayerInputComponent( UInputComponent* PlayerInputCompone
 
 void AFTBasePawn::UpdateSize() const
 {
-	if (SphereMesh && SphereMesh->GetStaticMesh())
+	if ( SphereMesh && SphereMesh->GetStaticMesh() )
 	{
 		SphereMesh->SetWorldScale3D( FVector( Strength ) );
 		const float MeshRadius = SphereMesh->GetStaticMesh()->GetBounds().SphereRadius;
 		const float MeshScale = SphereMesh->GetComponentScale().GetAbs().GetMax();
-		SphereCollider->SetSphereRadius(MeshRadius * MeshScale + ColliderRadiusThreshold);
+		SphereCollider->SetSphereRadius( MeshRadius * MeshScale + ColliderRadiusThreshold );
 	}
 }

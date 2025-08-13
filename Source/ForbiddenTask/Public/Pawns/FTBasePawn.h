@@ -34,6 +34,8 @@ public:
 
 	FORCEINLINE float GetStrength() const { return Strength; };
 
+	virtual void HandleMovement( const FVector& MoveDirection );
+
 protected:
 	//~ Begin AActor Interface
 	virtual void BeginPlay() override;
@@ -65,7 +67,7 @@ protected:
 
 	/**
 	 * Used to multiply Speed stat for AddForce to keep the Stats clearer
-	 * Force = Direction * Speed * Coefficient
+	 * Force = Direction * Speed / Strength * Coefficient
 	 */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
 	float SpeedCoefficient = 10000.f;
