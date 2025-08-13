@@ -8,6 +8,8 @@
 
 /**
  * Base GameMode class for the ForbiddenTask project.
+ *
+ * TODO: Win/Lose condition
  */
 UCLASS()
 class FORBIDDENTASK_API AFTGameMode : public AGameModeBase

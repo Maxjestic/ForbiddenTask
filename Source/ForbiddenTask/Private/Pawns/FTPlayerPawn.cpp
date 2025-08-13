@@ -17,7 +17,6 @@ AFTPlayerPawn::AFTPlayerPawn()
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>( TEXT( "SpringArm" ) );
 	SpringArm->SetupAttachment( RootComponent );
-	SpringArm->TargetArmLength = 1000.f;
 	SpringArm->bInheritPitch = false;
 	SpringArm->bInheritRoll = false;
 	SpringArm->bInheritYaw = false;
@@ -25,6 +24,7 @@ AFTPlayerPawn::AFTPlayerPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>( TEXT( "Camera" ) );
 	Camera->SetupAttachment( SpringArm, USpringArmComponent::SocketName );
 	Camera->SetProjectionMode( ECameraProjectionMode::Orthographic );
+	Camera->SetOrthoWidth( 4000.f );
 }
 
 void AFTPlayerPawn::Tick( float DeltaSeconds )
@@ -54,6 +54,20 @@ void AFTPlayerPawn::ChangeStats( const float& SpeedChange, const float& Strength
 	Speed += SpeedChange;
 	Strength += StrengthChange;
 	//TODO: Handle case if either of stats is less than zero
+
+	UpdateSize();
+}
+
+void AFTPlayerPawn::AddToSpeed( const float& ToAdd )
+{
+	Speed += ToAdd;
+	//TODO: Handle 0
+}
+
+void AFTPlayerPawn::AddToStrength( const float& ToAdd )
+{
+	Strength += ToAdd;
+	//TODO: Handle 0
 
 	UpdateSize();
 }

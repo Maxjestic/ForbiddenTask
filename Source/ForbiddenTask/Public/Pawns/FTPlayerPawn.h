@@ -12,6 +12,8 @@ class USpringArmComponent;
 /**
  * Represents the player-controlled pawn in the game, inheriting from AFTBasePawn.
  * Provides functionality for player movement, collision and altering stats.
+ *
+ * TODO: Add delegate for 0 strength/speed for lose condition
  */
 UCLASS( Blueprintable )
 class FORBIDDENTASK_API AFTPlayerPawn : public AFTBasePawn
@@ -50,6 +52,12 @@ public:
 	 */
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void ChangeStats( const float& SpeedChange, const float& StrengthChange );
+	
+	UFUNCTION( BlueprintCallable, Category = "Stats" )
+	void AddToSpeed( const float& ToAdd );
+	
+	UFUNCTION( BlueprintCallable, Category = "Stats" )
+	void AddToStrength( const float& ToAdd );
 
 protected:
 	// Callback for SphereCollider OnComponentBeginOverlap delegate

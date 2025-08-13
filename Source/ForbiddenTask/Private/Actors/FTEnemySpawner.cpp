@@ -46,9 +46,9 @@ void AFTEnemySpawner::SpawnNormal() const
 	for ( int32 i = 0; i < TotalEnemiesToSpawn; i++ )
 	{
 		const float RandomDistance = FMath::FRandRange( RadiusThreshold, SpawnRadius );
-		const FVector SpawnLocation = GetRandomSpawnLocation( RandomDistance );
+		const FVector SpawnLocation = PickRandomSpawnLocation( RandomDistance );
 
-		TSubclassOf<AFTEnemyPawn> SelectedEnemyClass = GetRandomEnemyType( EnemySpawnInfos );
+		TSubclassOf<AFTEnemyPawn> SelectedEnemyClass = PickRandomEnemyType( EnemySpawnInfos );
 		if ( !SelectedEnemyClass ) continue;
 
 		const float Strength = StrengthOverDistanceCurve->GetFloatValue( RandomDistance / SpawnRadius );
@@ -73,9 +73,9 @@ void AFTEnemySpawner::SpawnDataAsset() const
 		for ( int32 i = 0; i < ZoneInfo.AmountToSpawn; i++ )
 		{
 			const float RandomDistance = FMath::FRandRange( MinDistance, MinDistance + ZoneInfo.ZoneRadius );
-			const FVector SpawnLocation = GetRandomSpawnLocation( RandomDistance );
+			const FVector SpawnLocation = PickRandomSpawnLocation( RandomDistance );
 
-			const TSubclassOf<AFTEnemyPawn> SelectedEnemyClass = GetRandomEnemyType( ZoneInfo.EnemyTypes );
+			const TSubclassOf<AFTEnemyPawn> SelectedEnemyClass = PickRandomEnemyType( ZoneInfo.EnemyTypes );
 			if ( !SelectedEnemyClass ) continue;
 
 			const float Strength = FMath::FRandRange( ZoneInfo.StrengthRange.Min, ZoneInfo.StrengthRange.Max );
@@ -86,7 +86,7 @@ void AFTEnemySpawner::SpawnDataAsset() const
 	}
 }
 
-TSubclassOf<AFTEnemyPawn> AFTEnemySpawner::GetRandomEnemyType( const TArray<FEnemySpawnInfo>& InEnemySpawnInfos )
+TSubclassOf<AFTEnemyPawn> AFTEnemySpawner::PickRandomEnemyType( const TArray<FEnemySpawnInfo>& InEnemySpawnInfos )
 {
 	float TotalWeight = 0.f;
 	for ( const FEnemySpawnInfo& Info : InEnemySpawnInfos )
@@ -107,7 +107,7 @@ TSubclassOf<AFTEnemyPawn> AFTEnemySpawner::GetRandomEnemyType( const TArray<FEne
 	return nullptr;
 }
 
-FVector AFTEnemySpawner::GetRandomSpawnLocation( const float& RandomDistance ) const
+FVector AFTEnemySpawner::PickRandomSpawnLocation( const float& RandomDistance ) const
 {
 	const float RandomAngle = FMath::FRandRange( 0.f, 360.f );
 	const float Radians = FMath::DegreesToRadians( RandomAngle );
@@ -127,6 +127,7 @@ void AFTEnemySpawner::SpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, c
 	if ( SpawnedEnemy )
 	{		
 		SpawnedEnemy->SetStats( Strength, Speed );
+		// TODO: Connect with GameMode for win condition
 	}
 }
 

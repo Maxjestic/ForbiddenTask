@@ -64,9 +64,7 @@ protected:
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning" )
 	TArray<FEnemySpawnInfo> EnemySpawnInfos;
 
-	/**
-	 * Curve assets for stat scaling
-	 */
+	// --- Curve assets for stat scaling --- //
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Scaling" )
 	TObjectPtr<UCurveFloat> StrengthOverDistanceCurve;
 
@@ -80,14 +78,39 @@ protected:
 	TObjectPtr<USpawnConfigDataAsset> SpawnConfig;
 
 private:
+	/**
+	 * Called if Spawner Mode is set to Normal
+	 * Uses random position in a given radius and Curves for Stats
+	 */
 	void SpawnNormal() const;
 
+	/**
+	 * Called if Spawner Mode is set to DataAsset
+	 * Uses DataAsset with values for each ring in a spawning zone
+	 */
 	void SpawnDataAsset() const;
 
-	static TSubclassOf<AFTEnemyPawn> GetRandomEnemyType( const TArray<FEnemySpawnInfo>& InEnemySpawnInfos );
+	/**
+	 * Picks random Enemy Class based on set Weights
+	 * @param InEnemySpawnInfos Array of all EnemySpawnInfo considered
+	 * @return Random Class of picked enemy type
+	 */
+	static TSubclassOf<AFTEnemyPawn> PickRandomEnemyType( const TArray<FEnemySpawnInfo>& InEnemySpawnInfos );
 
-	FVector GetRandomSpawnLocation( const float& RandomDistance ) const;
+	/**
+	 * Picks random spawn location
+	 * @param RandomDistance Random distance from Player position for spawn
+	 * @return Random location in a given radius
+	 */
+	FVector PickRandomSpawnLocation( const float& RandomDistance ) const;
 
+	/**
+	 * Spawns Enemy and sets its Stats
+	 * @param EnemyClass Type of Enemy to spawn
+	 * @param SpawnLocation Location for spawn
+	 * @param Strength for the Enemy
+	 * @param Speed for the Enemy
+	 */
 	void SpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
 	                 const float& Strength,
 	                 const float& Speed ) const;
