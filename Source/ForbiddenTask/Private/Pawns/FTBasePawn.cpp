@@ -26,9 +26,9 @@ void AFTBasePawn::OnConstruction( const FTransform& Transform )
 	UpdateSize();
 }
 
-void AFTBasePawn::HandleMovement( const FVector& MoveDirection )
+void AFTBasePawn::HandleMovement( const FVector& ForceDirection )
 {
-	SphereCollider->AddForce( MoveDirection * (Speed / Strength) * SpeedCoefficient  );
+	SphereCollider->AddForce( ForceDirection * ( Speed / ( 1.f + Strength ) ) * SpeedCoefficient );
 }
 
 void AFTBasePawn::BeginPlay()
@@ -50,7 +50,7 @@ void AFTBasePawn::UpdateSize() const
 {
 	if ( SphereMesh && SphereMesh->GetStaticMesh() )
 	{
-		SphereMesh->SetWorldScale3D( FVector( Strength ) );
+		SphereMesh->SetWorldScale3D( FVector( 1.f + Strength ) );
 		const float MeshRadius = SphereMesh->GetStaticMesh()->GetBounds().SphereRadius;
 		const float MeshScale = SphereMesh->GetComponentScale().GetAbs().GetMax();
 		SphereCollider->SetSphereRadius( MeshRadius * MeshScale + ColliderRadiusThreshold );

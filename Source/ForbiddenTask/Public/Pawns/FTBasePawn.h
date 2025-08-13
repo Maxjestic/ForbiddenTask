@@ -34,7 +34,11 @@ public:
 
 	FORCEINLINE float GetStrength() const { return Strength; };
 
-	virtual void HandleMovement( const FVector& MoveDirection );
+	/**
+	 * Adds calculated Force in a given direction
+	 * @param ForceDirection Direction in which force will be applied
+	 */
+	virtual void HandleMovement( const FVector& ForceDirection );
 
 protected:
 	//~ Begin AActor Interface
@@ -54,15 +58,15 @@ protected:
 	TObjectPtr<UStaticMeshComponent> SphereMesh;
 
 	// Added to SphereCollider radius to make it more visible/responsive
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Components" )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.0") )
 	float ColliderRadiusThreshold = 1.f;
 
 	// Affects size and speed of the Pawn
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.1") )
 	float Strength = 1.f;
 
 	// Affects Speed and Handling when moving
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.1") )
 	float Speed = 1.f;
 
 	/**

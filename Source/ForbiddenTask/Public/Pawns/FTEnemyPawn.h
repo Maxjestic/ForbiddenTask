@@ -25,7 +25,11 @@ public:
 	 * Sets Collision Profile
 	 */
 	AFTEnemyPawn();
-
+	
+	//~ Begin AActor Interface
+	virtual void Tick( float DeltaSeconds ) override;
+	//~ End AActor Interface
+	
 	//~ Begin IFTConsumable Interface
 
 	/**
