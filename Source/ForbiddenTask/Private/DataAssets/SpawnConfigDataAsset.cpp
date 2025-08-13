@@ -21,4 +21,4 @@ void USpawnConfigDataAsset::PostEditChangeProperty(FPropertyChangedEvent& Proper
 		}
 	}
 }
-#endif
+#endif // WITH_EDITOR

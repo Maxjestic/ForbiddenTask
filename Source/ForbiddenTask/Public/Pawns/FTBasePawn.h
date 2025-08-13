@@ -34,6 +34,8 @@ public:
 
 	FORCEINLINE float GetStrength() const { return Strength; };
 
+	void SetStats(const float& NewStrength, const float& NewSpeed);
+
 	/**
 	 * Adds calculated Force in a given direction
 	 * @param ForceDirection Direction in which force will be applied

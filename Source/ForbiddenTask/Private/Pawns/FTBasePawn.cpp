@@ -26,11 +26,6 @@ void AFTBasePawn::OnConstruction( const FTransform& Transform )
 	UpdateSize();
 }
 
-void AFTBasePawn::HandleMovement( const FVector& ForceDirection )
-{
-	SphereCollider->AddForce( ForceDirection * ( Speed / ( 1.f + Strength ) ) * SpeedCoefficient );
-}
-
 void AFTBasePawn::BeginPlay()
 {
 	Super::BeginPlay();
@@ -44,6 +39,18 @@ void AFTBasePawn::Tick( float DeltaTime )
 void AFTBasePawn::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
 {
 	Super::SetupPlayerInputComponent( PlayerInputComponent );
+}
+
+void AFTBasePawn::SetStats( const float& NewStrength, const float& NewSpeed )
+{
+	Strength = FMath::Clamp( NewStrength, 0.f, NewStrength );
+	Speed = FMath::Clamp( NewSpeed, 0.f, NewSpeed );
+	UpdateSize();
+}
+
+void AFTBasePawn::HandleMovement( const FVector& ForceDirection )
+{
+	SphereCollider->AddForce( ForceDirection * ( Speed / ( 1.f + Strength ) ) * SpeedCoefficient );
 }
 
 void AFTBasePawn::UpdateSize() const
