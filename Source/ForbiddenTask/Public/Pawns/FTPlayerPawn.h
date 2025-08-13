@@ -10,10 +10,10 @@ class UCameraComponent;
 class USpringArmComponent;
 
 /**
- * Player Class
- * Handles movement
+ * Represents the player-controlled pawn in the game, inheriting from AFTBasePawn.
+ * Provides functionality for player movement, collision and altering stats.
  */
-UCLASS()
+UCLASS( Blueprintable )
 class FORBIDDENTASK_API AFTPlayerPawn : public AFTBasePawn
 {
 	GENERATED_BODY()
@@ -52,8 +52,9 @@ public:
 	void ChangeStats( const float& SpeedChange, const float& StrengthChange );
 
 protected:
+	// Callback for SphereCollider OnComponentBeginOverlap delegate
 	UFUNCTION()
-	void OnOverlapBegin( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	void OnBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	                     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult );
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
@@ -63,7 +64,6 @@ protected:
 	TObjectPtr<UCameraComponent> Camera;
 
 private:
-	
 	FVector MouseLocation;
 	bool bHasMouseLocation = false;
 };

@@ -17,15 +17,20 @@ void AFTEnemyPawn::AttemptToConsume_Implementation( AFTPlayerPawn* PlayerPawn )
 	{
 		return;
 	}
+
+	if (StrengthToGive < 0.f || SpeedToGive < 0.f)
+	{
+		PlayerPawn->ChangeStats( SpeedToGive, StrengthToGive );
+		Destroy();
+		return;
+	}
 	
 	if (PlayerPawn->GetStrength() > Strength)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Collided with something weaker!"));
 		PlayerPawn->ChangeStats( SpeedToGive, StrengthToGive );
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Collided with something too strong!"));
 		PlayerPawn->ChangeStats( -SpeedToGive, -StrengthToGive );
 	}
 	

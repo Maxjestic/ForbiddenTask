@@ -8,6 +8,7 @@
 
 class UInputAction;
 class UInputMappingContext;
+
 /**
  * Base class for PlayerController in the ForbiddenTask project
  */
@@ -17,19 +18,28 @@ class FORBIDDENTASK_API AFTPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
-	virtual void Tick(float DeltaSeconds) override;
-	
-protected:
-	virtual void SetupInputComponent() override;
-	virtual void BeginPlay() override;
+	//~ Begin AActor Interface
+	virtual void Tick( float DeltaSeconds ) override;
+	//~ End AActor Interface
 
+protected:
+	//~ Begin APlayerController Interface
+	virtual void SetupInputComponent() override;
+	//~ Begin APlayerController Interface
+
+	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
+	//~ End AActor Interface
+
+	//~ Begin Handling Input
 	void OnMoveTriggered();
 	void OnMoveCompleted();
+	//~ End Handling Input
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input" )
 	TObjectPtr<UInputMappingContext> DefaultInputMappingContext;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input|Actions")
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input|Actions" )
 	TObjectPtr<UInputAction> MoveAction;
 
 private:

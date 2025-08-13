@@ -8,7 +8,7 @@
 
 class AFTPlayerPawn;
 
-UINTERFACE(MinimalAPI)
+UINTERFACE( MinimalAPI )
 class UFTConsumable : public UInterface
 {
 	GENERATED_BODY()
@@ -20,7 +20,12 @@ class UFTConsumable : public UInterface
 class FORBIDDENTASK_API IFTConsumable
 {
 	GENERATED_BODY()
+
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Consumable")
-	void AttemptToConsume(AFTPlayerPawn* PlayerPawn);
+	/**
+	 * Called when the Player overlaps with anything that is Consumable
+	 * @param PlayerPawn Allows affecting the Player
+	 */
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "Consumable" )
+	void AttemptToConsume( AFTPlayerPawn* PlayerPawn );
 };

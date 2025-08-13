@@ -11,7 +11,7 @@
 AFTPlayerPawn::AFTPlayerPawn()
 {
 	SphereCollider->SetCollisionProfileName( "Player" );
-	SphereCollider->OnComponentBeginOverlap.AddDynamic( this, &AFTPlayerPawn::OnOverlapBegin );
+	SphereCollider->OnComponentBeginOverlap.AddDynamic( this, &AFTPlayerPawn::OnBeginOverlap );
 
 	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
@@ -35,7 +35,7 @@ void AFTPlayerPawn::Tick( float DeltaSeconds )
 		return;
 	}
 	const FVector ForceDirection = MouseLocation - GetActorLocation();
-	SphereMesh->AddForce( ForceDirection.GetSafeNormal2D() * Speed );
+	SphereMesh->AddForce( ForceDirection.GetSafeNormal2D() * Speed/Strength * SpeedCoefficient );
 }
 
 void AFTPlayerPawn::SetTargetLocation( const FVector& NewTargetLocation )
@@ -59,7 +59,7 @@ void AFTPlayerPawn::ChangeStats( const float& SpeedChange, const float& Strength
 	UpdateSize();
 }
 
-void AFTPlayerPawn::OnOverlapBegin( UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+void AFTPlayerPawn::OnBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult )
 {
 	if (IsValid(OtherActor) && OtherActor->Implements<UFTConsumable>())

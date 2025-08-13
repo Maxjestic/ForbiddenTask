@@ -32,7 +32,7 @@ void AFTPlayerController::BeginPlay()
 void AFTPlayerController::Tick( float DeltaSeconds )
 {
 	Super::Tick( DeltaSeconds );
-
+	
 	if ( !bIsButtonDown )
 	{
 		return;
@@ -44,17 +44,17 @@ void AFTPlayerController::Tick( float DeltaSeconds )
 		return;
 	}
 
-	FVector WorldLocation;
-	FVector WorldDirection;
-	if ( !DeprojectMousePositionToWorld( WorldLocation, WorldDirection ) )
+	FVector MouseWorldLocation;
+	FVector MouseWorldDirection;
+	if ( !DeprojectMousePositionToWorld( MouseWorldLocation, MouseWorldDirection ) )
 	{
 		return;
 	}
 
 	const FVector PlaneOrigin = FVector::ZeroVector;
 	const FVector PlaneNormal = FVector::UpVector;
-	const FVector TargetDirection = FMath::LinePlaneIntersection( WorldLocation,
-	                                                        WorldLocation + WorldDirection * 10000.f,
+	const FVector TargetDirection = FMath::LinePlaneIntersection( MouseWorldLocation,
+	                                                        MouseWorldLocation + MouseWorldDirection * 10000.f,
 	                                                        PlaneOrigin,
 	                                                        PlaneNormal );
 

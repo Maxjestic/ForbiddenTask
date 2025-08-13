@@ -7,28 +7,42 @@
 #include "FTBasePawn.generated.h"
 
 class USphereComponent;
+
 /**
- * Base class for player and enemy spheres
+ * AFTBasePawn serves as the base class for pawns in the ForbiddenTask project.
  */
-UCLASS( Abstract )
+UCLASS( Abstract, NotBlueprintable )
 class FORBIDDENTASK_API AFTBasePawn : public APawn
 {
 	GENERATED_BODY()
 
 public:
+	/**
+	 * Default constructor
+	 * Sets up Sphere and StaticMesh components
+	 */
 	AFTBasePawn();
 
-	virtual void OnConstruction(const FTransform& Transform) override;
-
+	//~ Begin AActor Interface
+	virtual void OnConstruction( const FTransform& Transform ) override;
 	virtual void Tick( float DeltaTime ) override;
+	//~ End AActor Interface
 
+	//~ Begin APawn Interface
 	virtual void SetupPlayerInputComponent( UInputComponent* PlayerInputComponent ) override;
+	//~ End APawn Interface
 
 	FORCEINLINE float GetStrength() const { return Strength; };
 
 protected:
+	//~ Begin AActor Interface
 	virtual void BeginPlay() override;
-	
+	//~ End AActor Interface
+
+	/**
+	 * Updates Scale of the SphereMesh after strength change and
+	 * SphereCollider radius is updated accordingly
+	 */
 	void UpdateSize() const;
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
@@ -37,12 +51,22 @@ protected:
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
 	TObjectPtr<UStaticMeshComponent> SphereMesh;
 
+	// Added to SphereCollider radius to make it more visible/responsive
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Components" )
 	float ColliderRadiusThreshold = 1.f;
 
+	// Affects size and speed of the Pawn
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
-	float Strength = 500.0f;
+	float Strength = 1.f;
 
+	// Affects Speed and Handling when moving
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
-	float Speed = 500.0f;
+	float Speed = 1.f;
+
+	/**
+	 * Used to multiply Speed stat for AddForce to keep the Stats clearer
+	 * Force = Direction * Speed * Coefficient
+	 */
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
+	float SpeedCoefficient = 10000.f;
 };
