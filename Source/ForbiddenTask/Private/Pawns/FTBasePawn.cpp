@@ -26,21 +26,6 @@ void AFTBasePawn::OnConstruction( const FTransform& Transform )
 	UpdateSize();
 }
 
-void AFTBasePawn::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AFTBasePawn::Tick( float DeltaTime )
-{
-	Super::Tick( DeltaTime );
-}
-
-void AFTBasePawn::SetupPlayerInputComponent( UInputComponent* PlayerInputComponent )
-{
-	Super::SetupPlayerInputComponent( PlayerInputComponent );
-}
-
 void AFTBasePawn::SetStats( const float& NewStrength, const float& NewSpeed )
 {
 	Strength = FMath::Clamp( NewStrength, 0.f, NewStrength );

@@ -25,12 +25,7 @@ public:
 
 	//~ Begin AActor Interface
 	virtual void OnConstruction( const FTransform& Transform ) override;
-	virtual void Tick( float DeltaTime ) override;
 	//~ End AActor Interface
-
-	//~ Begin APawn Interface
-	virtual void SetupPlayerInputComponent( UInputComponent* PlayerInputComponent ) override;
-	//~ End APawn Interface
 
 	FORCEINLINE float GetStrength() const { return Strength; };
 
@@ -43,9 +38,6 @@ public:
 	virtual void HandleMovement( const FVector& ForceDirection );
 
 protected:
-	//~ Begin AActor Interface
-	virtual void BeginPlay() override;
-	//~ End AActor Interface
 
 	/**
 	 * Updates Scale of the SphereMesh after strength change and

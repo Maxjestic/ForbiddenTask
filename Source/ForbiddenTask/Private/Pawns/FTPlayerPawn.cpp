@@ -49,7 +49,7 @@ void AFTPlayerPawn::StopMovement()
 	bHasMouseLocation = false;
 }
 
-void AFTPlayerPawn::ChangeStats( const float& SpeedChange, const float& StrengthChange )
+void AFTPlayerPawn::ChangeStats( const float SpeedChange, const float StrengthChange )
 {
 	Speed += SpeedChange;
 	Strength += StrengthChange;
@@ -58,15 +58,29 @@ void AFTPlayerPawn::ChangeStats( const float& SpeedChange, const float& Strength
 	UpdateSize();
 }
 
-void AFTPlayerPawn::AddToSpeed( const float& ToAdd )
+void AFTPlayerPawn::AddSpeed( const float Value )
 {
-	Speed += ToAdd;
+	Speed += Value;
 	//TODO: Handle 0
 }
 
-void AFTPlayerPawn::AddToStrength( const float& ToAdd )
+void AFTPlayerPawn::AddStrength( const float Value )
 {
-	Strength += ToAdd;
+	Strength += Value;
+	//TODO: Handle 0
+
+	UpdateSize();
+}
+
+void AFTPlayerPawn::SubtractSpeed( const float Value )
+{
+	Speed -= Value;
+	//TODO: Handle 0
+}
+
+void AFTPlayerPawn::SubtractStrength( const float Value )
+{
+	Strength -= Value;
 	//TODO: Handle 0
 
 	UpdateSize();

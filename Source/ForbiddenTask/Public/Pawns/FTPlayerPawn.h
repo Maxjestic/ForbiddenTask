@@ -28,10 +28,6 @@ public:
 	 */
 	AFTPlayerPawn();
 
-	//~ Begin AActor Interface
-	virtual void Tick( float DeltaSeconds ) override;
-	//~ End AActor Interface
-
 	/**
 	 * Called by PlayerController every Tick when the mouse button is pressed.
 	 * Sets the target-related properties
@@ -51,15 +47,25 @@ public:
 	 * @param StrengthChange Value will be added to the Strength value. Can be negative.
 	 */
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
-	void ChangeStats( const float& SpeedChange, const float& StrengthChange );
+	void ChangeStats( const float SpeedChange, const float StrengthChange );
 
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
-	void AddToSpeed( const float& ToAdd );
+	void AddSpeed( const float Value );
 
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
-	void AddToStrength( const float& ToAdd );
+	void AddStrength( const float Value );
+
+	UFUNCTION( BlueprintCallable, Category = "Stats" )
+	void SubtractSpeed( const float Value );
+
+	UFUNCTION( BlueprintCallable, Category = "Stats" )
+	void SubtractStrength( const float Value );
 
 protected:
+	//~ Begin AActor Interface
+	virtual void Tick( float DeltaSeconds ) override;
+	//~ End AActor Interface
+	
 	// Callback for SphereCollider OnComponentBeginOverlap delegate
 	UFUNCTION()
 	void OnBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
