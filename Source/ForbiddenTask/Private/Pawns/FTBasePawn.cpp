@@ -55,6 +55,7 @@ void AFTBasePawn::HandleMovement( const FVector& ForceDirection )
 
 void AFTBasePawn::UpdateSize() const
 {
+	check( SphereCollider );
 	if ( SphereMesh && SphereMesh->GetStaticMesh() )
 	{
 		SphereMesh->SetWorldScale3D( FVector( 1.f + Strength ) );

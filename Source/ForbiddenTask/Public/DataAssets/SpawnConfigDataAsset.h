@@ -44,7 +44,7 @@ struct FSpawnZoneInfo
 	float ZoneRadius = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ClampMin = "0"))
-	int AmountToSpawn = 0;
+	int32 AmountToSpawn = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<FEnemySpawnInfo> EnemyTypes;

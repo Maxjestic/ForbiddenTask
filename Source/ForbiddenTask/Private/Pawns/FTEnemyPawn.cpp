@@ -16,6 +16,7 @@ void AFTEnemyPawn::Tick( float DeltaSeconds )
 	Super::Tick( DeltaSeconds );
 }
 
+// check if it's possible if the implementation in BP exists
 void AFTEnemyPawn::AttemptToConsume_Implementation( AFTPlayerPawn* PlayerPawn )
 {
 	UE_LOG(LogTemp, Error, TEXT("No implementation"));

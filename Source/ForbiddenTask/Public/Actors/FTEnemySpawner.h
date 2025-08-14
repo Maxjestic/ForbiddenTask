@@ -12,6 +12,7 @@ class USpawnConfigDataAsset;
 UENUM( BlueprintType )
 enum class ESpawnerType : uint8
 {
+	// TODO: add comment
 	Normal,
 	DataAsset,
 };
@@ -37,20 +38,13 @@ protected:
 	virtual void BeginPlay() override;
 	//~ Begin AActor Interface
 
+	/**
+	 * Type of spawner
+	 * Normal - Uses radius and common data for the whole area
+	 * DataAsset - Uses data specified in DataAsset
+	 */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning" )
 	ESpawnerType SpawnerType = ESpawnerType::Normal;
-
-	/**
-	 * The total number of enemies to spawn, used only for Non-DataAsset Mode
-	 */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning", meta = (ClampMin = "0") )
-	int32 TotalEnemiesToSpawn = 1;
-
-	/**
-	 * Max spawn distance from the player
-	 */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning", meta = (ClampMin = "0.0") )
-	float SpawnRadius = 3000.0f;
 
 	/**
 	 * Used to prevent enemies spawning on the Player
@@ -59,22 +53,34 @@ protected:
 	float RadiusThreshold = 100.f;
 
 	/**
+	 * The total number of enemies to spawn, used only for Non-DataAsset Mode
+	 */
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode", meta = (ClampMin = "0") )
+	int32 TotalEnemiesToSpawn = 1;
+
+	/**
+	 * Max spawn distance from the player
+	 */
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode", meta = (ClampMin = "0.0") )
+	float SpawnRadius = 3000.0f;
+
+	/**
 	 * The list of possible enemy types to spawn with weight
 	 */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning" )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode" )
 	TArray<FEnemySpawnInfo> EnemySpawnInfos;
 
 	// --- Curve assets for stat scaling --- //
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Scaling" )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode" )
 	TObjectPtr<UCurveFloat> StrengthOverDistanceCurve;
 
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Scaling" )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode" )
 	TObjectPtr<UCurveFloat> SpeedOverDistanceCurve;
 
 	/**
 	 * Used for DataAsset Mode
 	 */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning" )
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|DataAsset Mode" )
 	TObjectPtr<USpawnConfigDataAsset> SpawnConfig;
 
 private:
@@ -102,7 +108,7 @@ private:
 	 * @param RandomDistance Random distance from Player position for spawn
 	 * @return Random location in a given radius
 	 */
-	FVector PickRandomSpawnLocation( const float& RandomDistance ) const;
+	FVector PickRandomSpawnLocation( const float RandomDistance ) const;
 
 	/**
 	 * Spawns Enemy and sets its Stats
@@ -112,8 +118,8 @@ private:
 	 * @param Speed for the Enemy
 	 */
 	void SpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
-	                 const float& Strength,
-	                 const float& Speed ) const;
+	                 const float Strength,
+	                 const float Speed ) const;
 
 	FVector PlayerPosition = FVector::ZeroVector;
 

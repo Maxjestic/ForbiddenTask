@@ -16,4 +16,7 @@ class FORBIDDENTASK_API UBTDecorator_IsWeakerOrEqual : public UBTDecorator
 
 protected:
 	virtual bool CalculateRawConditionValue( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory ) const override;
+
+	//	AIMODULE_API virtual FString GetStaticDescription() const override; make it reusable with enum
+
 };

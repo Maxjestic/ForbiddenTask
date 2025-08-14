@@ -52,10 +52,10 @@ public:
 	 */
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void ChangeStats( const float& SpeedChange, const float& StrengthChange );
-	
+
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void AddToSpeed( const float& ToAdd );
-	
+
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void AddToStrength( const float& ToAdd );
 
@@ -72,6 +72,6 @@ protected:
 	TObjectPtr<UCameraComponent> Camera;
 
 private:
-	FVector MouseLocation;
+	FVector MouseLocation = FVector::ZeroVector;
 	bool bHasMouseLocation = false;
 };

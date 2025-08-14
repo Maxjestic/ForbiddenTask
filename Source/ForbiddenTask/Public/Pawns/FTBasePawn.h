@@ -75,6 +75,6 @@ protected:
 	 * Used to multiply Speed stat for AddForce to keep the Stats clearer
 	 * Force = Direction * Speed / Strength * Coefficient
 	 */
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" ) //meta advanced display
 	float SpeedCoefficient = 10000.f;
 };

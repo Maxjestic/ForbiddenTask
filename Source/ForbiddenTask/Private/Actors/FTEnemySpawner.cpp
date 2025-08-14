@@ -107,7 +107,7 @@ TSubclassOf<AFTEnemyPawn> AFTEnemySpawner::PickRandomEnemyType( const TArray<FEn
 	return nullptr;
 }
 
-FVector AFTEnemySpawner::PickRandomSpawnLocation( const float& RandomDistance ) const
+FVector AFTEnemySpawner::PickRandomSpawnLocation( const float RandomDistance ) const
 {
 	const float RandomAngle = FMath::FRandRange( 0.f, 360.f );
 	const float Radians = FMath::DegreesToRadians( RandomAngle );
@@ -118,7 +118,7 @@ FVector AFTEnemySpawner::PickRandomSpawnLocation( const float& RandomDistance ) 
 }
 
 void AFTEnemySpawner::SpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
-	const float& Strength, const float& Speed ) const
+	const float Strength, const float Speed ) const
 {
 	AFTEnemyPawn* SpawnedEnemy = GetWorld()->SpawnActor<AFTEnemyPawn>(
 			EnemyClass,
