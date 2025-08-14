@@ -50,7 +50,7 @@ void AFTBasePawn::SetStats( const float& NewStrength, const float& NewSpeed )
 
 void AFTBasePawn::HandleMovement( const FVector& ForceDirection )
 {
-	SphereCollider->AddForce( ForceDirection * ( Speed / ( 1.f + Strength ) ) * SpeedCoefficient );
+	SphereCollider->AddForce( ForceDirection * ( SpeedCoefficient / ( 1.f + Strength ) ) * Speed );
 }
 
 void AFTBasePawn::UpdateSize() const
