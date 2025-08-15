@@ -11,6 +11,7 @@ class UUserWidget;
 /**
  * Game Instance class for this project
  * Stores classes for UI widgets used in the game
+ * TODO: Add some checks for if the Subclasses are filled
  */
 UCLASS()
 class FORBIDDENTASK_API UFTGameInstance : public UGameInstance
