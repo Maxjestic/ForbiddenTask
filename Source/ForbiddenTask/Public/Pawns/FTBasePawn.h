@@ -23,10 +23,6 @@ public:
 	 */
 	AFTBasePawn();
 
-	//~ Begin AActor Interface
-	virtual void OnConstruction( const FTransform& Transform ) override;
-	//~ End AActor Interface
-
 	/**
 	 * Adds calculated Force in a given direction
 	 * @param ForceDirection Direction in which force will be applied
@@ -35,10 +31,13 @@ public:
 	
 	FORCEINLINE float GetStrength() const { return Strength; };
 	
-	void SetStats(const float& NewStrength, const float& NewSpeed);
+	void SetStats(const float NewStrength, const float NewSpeed);
 
 protected:
-
+	//~ Begin AActor Interface
+	virtual void OnConstruction( const FTransform& Transform ) override;
+	//~ End AActor Interface
+	
 	/**
 	 * Updates Scale of the SphereMesh after strength change and
 	 * SphereCollider radius is updated accordingly
@@ -58,11 +57,11 @@ protected:
 	float ColliderRadiusThreshold = 1.f;
 
 	/** Affects size and speed of the Pawn */
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.1") )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.0") )
 	float Strength = 1.f;
 
 	/** Affects Speed and Handling when moving */
-	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.1") )
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.0") )
 	float Speed = 1.f;
 
 	/** Used to multiply Speed stat for AddForce to keep the Stats clearer */

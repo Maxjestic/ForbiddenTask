@@ -26,7 +26,7 @@ void AFTBasePawn::OnConstruction( const FTransform& Transform )
 	UpdateSize();
 }
 
-void AFTBasePawn::SetStats( const float& NewStrength, const float& NewSpeed )
+void AFTBasePawn::SetStats( const float NewStrength, const float NewSpeed )
 {
 	Strength = FMath::Clamp( NewStrength, 0.f, NewStrength );
 	Speed = FMath::Clamp( NewSpeed, 0.f, NewSpeed );

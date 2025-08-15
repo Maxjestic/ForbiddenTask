@@ -29,19 +29,6 @@ public:
 	AFTPlayerPawn();
 
 	/**
-	 * Called by PlayerController every Tick when the mouse button is pressed.
-	 * Sets the target-related properties
-	 * @param NewTargetLocation Position of the cursor in world space
-	 */
-	void SetTargetLocation( const FVector& NewTargetLocation );
-
-	/**
-	 * Called by PlayerController when the mouse button is released.
-	 * Sets the mouse location properties
-	 */
-	void StopMovement();
-
-	/**
 	 * Alters stats by passed values.
 	 * @param SpeedChange Value will be added to the Speed value. Can be negative.
 	 * @param StrengthChange Value will be added to the Strength value. Can be negative.
@@ -61,12 +48,8 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void SubtractStrength( const float Value );
 
-protected:
-	//~ Begin AActor Interface
-	virtual void Tick( float DeltaSeconds ) override;
-	//~ End AActor Interface
-	
-	// Callback for SphereCollider OnComponentBeginOverlap delegate
+protected:	
+	/** Callback for SphereCollider OnComponentBeginOverlap delegate */
 	UFUNCTION()
 	void OnBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	                     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult );
@@ -76,8 +59,5 @@ protected:
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
 	TObjectPtr<UCameraComponent> Camera;
-
-private:
-	FVector MouseLocation = FVector::ZeroVector;
-	bool bHasMouseLocation = false;
+	
 };

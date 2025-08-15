@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/SphereComponent.h"
+#include "ForbiddenTask/FTLogChannels.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Interfaces/FTConsumable.h"
 
@@ -25,28 +26,6 @@ AFTPlayerPawn::AFTPlayerPawn()
 	Camera->SetupAttachment( SpringArm, USpringArmComponent::SocketName );
 	Camera->SetProjectionMode( ECameraProjectionMode::Orthographic );
 	Camera->SetOrthoWidth( 4000.f );
-}
-
-void AFTPlayerPawn::Tick( float DeltaSeconds )
-{
-	Super::Tick( DeltaSeconds );
-	if ( bHasMouseLocation )
-	{
-		const FVector ForceDirection = ( MouseLocation - GetActorLocation() ).GetSafeNormal2D();
-		HandleMovement( ForceDirection );
-	}
-}
-
-void AFTPlayerPawn::SetTargetLocation( const FVector& NewTargetLocation )
-{
-	MouseLocation = NewTargetLocation;
-	bHasMouseLocation = true;
-}
-
-void AFTPlayerPawn::StopMovement()
-{
-	MouseLocation = FVector::ZeroVector;
-	bHasMouseLocation = false;
 }
 
 void AFTPlayerPawn::ChangeStats( const float SpeedChange, const float StrengthChange )
