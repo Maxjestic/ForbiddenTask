@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "FTPlayerController.generated.h"
 
+class UFTGameInstance;
 class AFTPlayerPawn;
 class UInputAction;
 class UInputMappingContext;
@@ -33,6 +34,9 @@ protected:
 	/** Callback for MoveAction Trigger Delegate */
 	void OnMoveTriggered();
 
+	/** Callback for PauseAction Trigger Delegate */
+	void OnPause();
+
 	/** Default Input Mapping Context used by this controller to handle movement */
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input" )
 	TObjectPtr<UInputMappingContext> DefaultInputMappingContext;
@@ -41,11 +45,22 @@ protected:
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input|Actions" )
 	TObjectPtr<UInputAction> MoveAction;
 
+	/** Pause action that is responsible for triggering pause */
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input|Actions" )
+	TObjectPtr<UInputAction> PauseAction;
+
 private:
 	/** Creates HUDWidget and sets it up */
 	void SetupHUDWidget();
+
+	/** Lazy loading for the Game Instance */
+	UFTGameInstance* GetGameInstance();
 	
 	/** Cached ControlledPawn only for movement purposes */
 	UPROPERTY()
-	TObjectPtr<AFTPlayerPawn> ControlledPawn;
+	TObjectPtr<AFTPlayerPawn> ControlledPawn = nullptr;
+
+	/** Cached GameInstance used for creating widgets */
+	UPROPERTY()
+	TObjectPtr<UFTGameInstance> GameInstance = nullptr;
 };

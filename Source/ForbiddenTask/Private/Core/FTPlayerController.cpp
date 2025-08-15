@@ -28,6 +28,7 @@ void AFTPlayerController::SetupInputComponent()
 	if ( UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>( InputComponent ) )
 	{
 		EnhancedInput->BindAction( MoveAction, ETriggerEvent::Triggered, this, &AFTPlayerController::OnMoveTriggered );
+		EnhancedInput->BindAction( PauseAction, ETriggerEvent::Triggered, this, &AFTPlayerController::OnPause );
 	}
 }
 
@@ -67,15 +68,20 @@ void AFTPlayerController::OnMoveTriggered()
 	ControlledPawn->HandleMovement( MovementDirection );
 }
 
+void AFTPlayerController::OnPause()
+{
+	if ( UUserWidget* PauseMenu = CreateWidget<UUserWidget>( this, GetGameInstance()->PauseMenuWidgetClass ) )
+	{
+		FT_LOG_WARNING( TEXT("PAUSE TRIGGERED") )
+		PauseMenu->AddToViewport();
+		SetPause( true );
+		SetInputMode( FInputModeUIOnly() );
+	}
+}
+
 void AFTPlayerController::SetupHUDWidget()
 {
-	const UFTGameInstance* GameInstance = GetGameInstance<UFTGameInstance>();
-	if ( !GameInstance )
-	{
-		FT_LOG_ERROR( TEXT("Wrong Game Instance") )
-	}
-
-	if ( UFTHUDWidget* HUDWidget = CreateWidget<UFTHUDWidget>( this, GameInstance->HUDWidgetClass ) )
+	if ( UFTHUDWidget* HUDWidget = CreateWidget<UFTHUDWidget>( this, GetGameInstance()->HUDWidgetClass ) )
 	{
 		HUDWidget->BindToPlayerDelegates( ControlledPawn );
 		HUDWidget->AddToViewport();
@@ -84,4 +90,17 @@ void AFTPlayerController::SetupHUDWidget()
 	{
 		FT_LOG_ERROR( TEXT("Failed to create HUD Widget") )
 	}
+}
+
+UFTGameInstance* AFTPlayerController::GetGameInstance()
+{
+	if ( !GameInstance )
+	{
+		GameInstance = Cast<UFTGameInstance>( GetWorld()->GetGameInstance() );
+		if ( !GameInstance )
+		{
+			FT_LOG_ERROR( TEXT("Game Instance is invalid!") );
+		}
+	}
+	return GameInstance;
 }
