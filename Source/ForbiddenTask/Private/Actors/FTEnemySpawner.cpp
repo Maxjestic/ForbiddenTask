@@ -1,9 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyright Maxjestic
 
 #include "Actors/FTEnemySpawner.h"
 
-#include "DataAssets/SpawnConfigDataAsset.h"
+#include "DataAssets/FTSpawnConfigDataAsset.h"
+#include "ForbiddenTask/FTLogChannels.h"
 #include "Kismet/GameplayStatics.h"
 #include "Pawns/FTEnemyPawn.h"
 
@@ -16,30 +16,39 @@ void AFTEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn( GetWorld(), 0 );
-	if ( !IsValid( PlayerPawn ) )
+	if ( !TryInitializePlayerPosition() )
 	{
-		UE_LOG( LogTemp, Error, TEXT( "PlayerPawn is invalid - In EnemySpawner!" ) );
 		return;
 	}
-	PlayerPosition = PlayerPawn->GetActorLocation();
 
 	switch ( SpawnerType )
 	{
-	case ESpawnerType::Normal:
-		SpawnNormal();
+	case EFTSpawnerType::Normal:
+		SpawningNormalMode();
 		break;
-	case ESpawnerType::DataAsset:
-		SpawnDataAsset();
+	case EFTSpawnerType::DataAsset:
+		SpawningDataAssetMode();
 		break;
 	}
 }
 
-void AFTEnemySpawner::SpawnNormal() const
+bool AFTEnemySpawner::TryInitializePlayerPosition()
+{
+	const APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn( GetWorld(), 0 );
+	if ( !IsValid( PlayerPawn ) )
+	{
+		FT_LOG_ERROR( TEXT( "PlayerPawn is invalid!" ) );
+		return false;
+	}
+	PlayerPosition = PlayerPawn->GetActorLocation();
+	return true;
+}
+
+void AFTEnemySpawner::SpawningNormalMode() const
 {
 	if ( EnemySpawnInfos.IsEmpty() || !StrengthOverDistanceCurve || !SpeedOverDistanceCurve )
 	{
-		UE_LOG( LogTemp, Error, TEXT( "Necessary data for Normal Spawn Mode missing!" ) );
+		FT_LOG_ERROR( TEXT("Necessary data for Normal Spawn Mode missing!") );
 		return;
 	}
 
@@ -53,22 +62,22 @@ void AFTEnemySpawner::SpawnNormal() const
 
 		const float Strength = StrengthOverDistanceCurve->GetFloatValue( RandomDistance / SpawnRadius );
 		const float Speed = SpeedOverDistanceCurve->GetFloatValue( RandomDistance / SpawnRadius );
-		
+
 		SpawnEnemy( SelectedEnemyClass, SpawnLocation, Strength, Speed );
 	}
 }
 
-void AFTEnemySpawner::SpawnDataAsset() const
+void AFTEnemySpawner::SpawningDataAssetMode() const
 {
 	if ( !SpawnConfig )
 	{
-		UE_LOG( LogTemp, Error, TEXT("Necessary data for Data Asset Spawn Mode missing!") );
+		FT_LOG_ERROR( TEXT("Necessary data for Data Asset Spawn Mode missing!") );
 		return;
 	}
 
 	float MinDistance = RadiusThreshold;
 
-	for ( const FSpawnZoneInfo& ZoneInfo : SpawnConfig->SpawnZones )
+	for ( const FFTSpawnZoneInfo& ZoneInfo : SpawnConfig->SpawnZones )
 	{
 		for ( int32 i = 0; i < ZoneInfo.AmountToSpawn; i++ )
 		{
@@ -86,16 +95,16 @@ void AFTEnemySpawner::SpawnDataAsset() const
 	}
 }
 
-TSubclassOf<AFTEnemyPawn> AFTEnemySpawner::PickRandomEnemyType( const TArray<FEnemySpawnInfo>& InEnemySpawnInfos )
+TSubclassOf<AFTEnemyPawn> AFTEnemySpawner::PickRandomEnemyType( const TArray<FFTEnemySpawnInfo>& InEnemySpawnInfos )
 {
 	float TotalWeight = 0.f;
-	for ( const FEnemySpawnInfo& Info : InEnemySpawnInfos )
+	for ( const FFTEnemySpawnInfo& Info : InEnemySpawnInfos )
 	{
 		TotalWeight += Info.SpawnWeight;
 	}
 
 	float RandomSelection = FMath::FRandRange( 0.f, TotalWeight );
-	for ( const FEnemySpawnInfo& Info : InEnemySpawnInfos )
+	for ( const FFTEnemySpawnInfo& Info : InEnemySpawnInfos )
 	{
 		RandomSelection -= Info.SpawnWeight;
 		if ( RandomSelection <= 0.f )
@@ -118,16 +127,17 @@ FVector AFTEnemySpawner::PickRandomSpawnLocation( const float RandomDistance ) c
 }
 
 void AFTEnemySpawner::SpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
-	const float Strength, const float Speed ) const
+                                  const float Strength, const float Speed ) const
 {
 	AFTEnemyPawn* SpawnedEnemy = GetWorld()->SpawnActor<AFTEnemyPawn>(
-			EnemyClass,
-			SpawnLocation,
-			FRotator::ZeroRotator );
+		EnemyClass,
+		SpawnLocation,
+		FRotator::ZeroRotator );
 	if ( SpawnedEnemy )
-	{		
+	{
 		SpawnedEnemy->SetStats( Strength, Speed );
 		// TODO: Connect with GameMode for win condition
+		// TODO: Enemies can spawn on each other, return true and add while 
 	}
 }
 

@@ -4,6 +4,7 @@
 #include "Pawns/FTEnemyPawn.h"
 
 #include "Components/SphereComponent.h"
+#include "ForbiddenTask/FTLogChannels.h"
 #include "Pawns/FTPlayerPawn.h"
 
 AFTEnemyPawn::AFTEnemyPawn()
@@ -14,5 +15,5 @@ AFTEnemyPawn::AFTEnemyPawn()
 // check if it's possible if the implementation in BP exists
 void AFTEnemyPawn::AttemptToConsume_Implementation( AFTPlayerPawn* PlayerPawn )
 {
-	UE_LOG(LogTemp, Error, TEXT("No implementation"));
+	UE_LOG(LogFT, Error, TEXT("No implementation"));
 }

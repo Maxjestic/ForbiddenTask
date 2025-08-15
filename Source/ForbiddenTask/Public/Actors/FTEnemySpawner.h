@@ -1,25 +1,35 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Maxjestic
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DataAssets/SpawnConfigDataAsset.h"
+#include "DataAssets/FTSpawnConfigDataAsset.h"
 #include "GameFramework/Actor.h"
 #include "FTEnemySpawner.generated.h"
 
-class USpawnConfigDataAsset;
+class UFTSpawnConfigDataAsset;
 
 UENUM( BlueprintType )
-enum class ESpawnerType : uint8
+enum class EFTSpawnerType : uint8
 {
-	// TODO: add comment
+	/**
+	 * Uses radius to define area for spawning
+	 * Number of Enemies and provided Enemy Types with weight to spawn Enemies
+	 * Curves for distance - power relation.
+	 */
 	Normal,
+	/**
+	 * Uses DataAsset for ring-like areas around the spawn center point
+	 * Data from DataAsset is used for Enemy spawning details (Power, chance of spawning, types, etc.)
+	 */
 	DataAsset,
 };
 
 /**
  * Class for EnemySpawner
- * Spawns enemies using SpawnConfigDataAsset
+ * Spawns enemies around Player 
+ * Values in Properties (Normal Mode)
+ * Values from DataAsset (DataAsset Mode)
  */
 UCLASS()
 class FORBIDDENTASK_API AFTEnemySpawner : public AActor
@@ -44,7 +54,7 @@ protected:
 	 * DataAsset - Uses data specified in DataAsset
 	 */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning" )
-	ESpawnerType SpawnerType = ESpawnerType::Normal;
+	EFTSpawnerType SpawnerType = EFTSpawnerType::Normal;
 
 	/**
 	 * Used to prevent enemies spawning on the Player
@@ -68,7 +78,7 @@ protected:
 	 * The list of possible enemy types to spawn with weight
 	 */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode" )
-	TArray<FEnemySpawnInfo> EnemySpawnInfos;
+	TArray<FFTEnemySpawnInfo> EnemySpawnInfos;
 
 	// --- Curve assets for stat scaling --- //
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode" )
@@ -81,27 +91,33 @@ protected:
 	 * Used for DataAsset Mode
 	 */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|DataAsset Mode" )
-	TObjectPtr<USpawnConfigDataAsset> SpawnConfig;
+	TObjectPtr<UFTSpawnConfigDataAsset> SpawnConfig;
 
 private:
+	/**
+	 * Tries to find the Player and get its position in World Space
+	 * @return True - Success, False - Failed
+	 */
+	bool TryInitializePlayerPosition();
+
 	/**
 	 * Called if Spawner Mode is set to Normal
 	 * Uses random position in a given radius and Curves for Stats
 	 */
-	void SpawnNormal() const;
+	void SpawningNormalMode() const;
 
 	/**
 	 * Called if Spawner Mode is set to DataAsset
 	 * Uses DataAsset with values for each ring in a spawning zone
 	 */
-	void SpawnDataAsset() const;
+	void SpawningDataAssetMode() const;
 
 	/**
 	 * Picks random Enemy Class based on set Weights
 	 * @param InEnemySpawnInfos Array of all EnemySpawnInfo considered
 	 * @return Random Class of picked enemy type
 	 */
-	static TSubclassOf<AFTEnemyPawn> PickRandomEnemyType( const TArray<FEnemySpawnInfo>& InEnemySpawnInfos );
+	static TSubclassOf<AFTEnemyPawn> PickRandomEnemyType( const TArray<FFTEnemySpawnInfo>& InEnemySpawnInfos );
 
 	/**
 	 * Picks random spawn location
@@ -123,8 +139,9 @@ private:
 
 	FVector PlayerPosition = FVector::ZeroVector;
 
-public:
 #if WITH_EDITOR
+
+public:
 	/**
 	 * Keeps Max <= Min for StatRanges
 	 */

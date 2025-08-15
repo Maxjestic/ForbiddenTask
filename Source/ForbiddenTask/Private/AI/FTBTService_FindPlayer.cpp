@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI/BTService_FindPlayer.h"
+#include "AI/FTBTService_FindPlayer.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-UBTService_FindPlayer::UBTService_FindPlayer()
+UFTBTService_FindPlayer::UFTBTService_FindPlayer()
 {
 	NodeName = TEXT( "Find Player" );
 }
 
-void UBTService_FindPlayer::TickNode( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds )
+void UFTBTService_FindPlayer::TickNode( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds )
 {
 	Super::TickNode( OwnerComp, NodeMemory, DeltaSeconds );
 
