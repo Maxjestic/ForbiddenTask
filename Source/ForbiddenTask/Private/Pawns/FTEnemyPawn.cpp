@@ -4,7 +4,6 @@
 #include "Pawns/FTEnemyPawn.h"
 
 #include "Components/SphereComponent.h"
-#include "ForbiddenTask/FTLogChannels.h"
 #include "Pawns/FTPlayerPawn.h"
 
 AFTEnemyPawn::AFTEnemyPawn()
@@ -12,8 +11,11 @@ AFTEnemyPawn::AFTEnemyPawn()
 	SphereCollider->SetCollisionProfileName( "Enemy" );
 }
 
-// check if it's possible if the implementation in BP exists
 void AFTEnemyPawn::AttemptToConsume_Implementation( AFTPlayerPawn* PlayerPawn )
 {
-	UE_LOG(LogFT, Error, TEXT("No implementation"));
+	// Helps to find Blueprints that don't override this function
+	ensureMsgf( false,
+	            TEXT("AttemptToConsume must be implemented in the Blueprint for class %s!"),
+	            *GetClass()->GetName()
+	);
 }

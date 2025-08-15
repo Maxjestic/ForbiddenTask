@@ -2,5 +2,3 @@
 
 
 #include "Interfaces/FTConsumable.h"
-
-// Add default functionality here for any IFTConsumable functions that are not pure virtual.

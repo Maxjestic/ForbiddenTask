@@ -7,7 +7,7 @@ void AFTAIController::OnPossess( APawn* InPawn )
 {
 	Super::OnPossess( InPawn );
 
-	if (BehaviorTree)
+	if ( BehaviorTree )
 	{
 		RunBehaviorTree( BehaviorTree );
 	}

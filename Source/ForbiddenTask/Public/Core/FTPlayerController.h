@@ -16,29 +16,27 @@ UCLASS()
 class FORBIDDENTASK_API AFTPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-
-public:
+	
+protected:
 	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
 	virtual void Tick( float DeltaSeconds ) override;
 	//~ End AActor Interface
-
-protected:
+	
 	//~ Begin APlayerController Interface
 	virtual void SetupInputComponent() override;
 	//~ Begin APlayerController Interface
-
-	//~ Begin AActor Interface
-	virtual void BeginPlay() override;
-	//~ End AActor Interface
 
 	//~ Begin Handling Input
 	void OnMoveTriggered();
 	void OnMoveCompleted();
 	//~ End Handling Input
 
+	/** Default Input Mapping Context used by this controller to handle movement */
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input" )
 	TObjectPtr<UInputMappingContext> DefaultInputMappingContext;
 
+	/** Move action that is responsible for triggering movement logic */
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input|Actions" )
 	TObjectPtr<UInputAction> MoveAction;
 

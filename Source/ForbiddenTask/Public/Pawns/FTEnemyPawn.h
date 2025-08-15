@@ -32,7 +32,8 @@ public:
 
 	/**
 	 * Handles being consumed by the Player
-	 * Can be overriden in blueprint
+	 * MUST be overriden in the Blueprint
+	 * Don't call Parent Version
 	 * @param PlayerPawn Used for altering player stats
 	 */
 	virtual void AttemptToConsume_Implementation( AFTPlayerPawn* PlayerPawn ) override;

@@ -40,8 +40,7 @@ void AFTBasePawn::HandleMovement( const FVector& ForceDirection )
 
 void AFTBasePawn::UpdateSize() const
 {
-	check( SphereCollider );
-	if ( SphereMesh && SphereMesh->GetStaticMesh() )
+	if ( SphereMesh->GetStaticMesh() )
 	{
 		SphereMesh->SetWorldScale3D( FVector( 1.f + Strength ) );
 		const float MeshRadius = SphereMesh->GetStaticMesh()->GetBounds().SphereRadius;

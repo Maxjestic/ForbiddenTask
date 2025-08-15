@@ -5,18 +5,8 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "ForbiddenTask/FTLogChannels.h"
 #include "Pawns/FTPlayerPawn.h"
-
-void AFTPlayerController::SetupInputComponent()
-{
-	Super::SetupInputComponent();
-
-	if ( UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>( InputComponent ) )
-	{
-		EnhancedInput->BindAction( MoveAction, ETriggerEvent::Triggered, this, &AFTPlayerController::OnMoveTriggered );
-		EnhancedInput->BindAction( MoveAction, ETriggerEvent::Completed, this, &AFTPlayerController::OnMoveCompleted );
-	}
-}
 
 void AFTPlayerController::BeginPlay()
 {
@@ -61,8 +51,20 @@ void AFTPlayerController::Tick( float DeltaSeconds )
 	PlayerPawn->SetTargetLocation( TargetDirection );
 }
 
+void AFTPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	if ( UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>( InputComponent ) )
+	{
+		EnhancedInput->BindAction( MoveAction, ETriggerEvent::Triggered, this, &AFTPlayerController::OnMoveTriggered );
+		EnhancedInput->BindAction( MoveAction, ETriggerEvent::Completed, this, &AFTPlayerController::OnMoveCompleted );
+	}
+}
+
 void AFTPlayerController::OnMoveTriggered()
 {
+	FT_LOG_INFO( TEXT("Mouse Triggered") )
 	bIsButtonDown = true;
 }
 

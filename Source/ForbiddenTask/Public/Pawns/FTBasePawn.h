@@ -27,15 +27,15 @@ public:
 	virtual void OnConstruction( const FTransform& Transform ) override;
 	//~ End AActor Interface
 
-	FORCEINLINE float GetStrength() const { return Strength; };
-
-	void SetStats(const float& NewStrength, const float& NewSpeed);
-
 	/**
 	 * Adds calculated Force in a given direction
 	 * @param ForceDirection Direction in which force will be applied
 	 */
 	virtual void HandleMovement( const FVector& ForceDirection );
+	
+	FORCEINLINE float GetStrength() const { return Strength; };
+	
+	void SetStats(const float& NewStrength, const float& NewSpeed);
 
 protected:
 
@@ -45,28 +45,27 @@ protected:
 	 */
 	void UpdateSize() const;
 
+	/** Sphere Component used as Root, Collider and AddForce target */
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
 	TObjectPtr<USphereComponent> SphereCollider;
 
+	/** Static Mesh used only as a visual representation */
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
 	TObjectPtr<UStaticMeshComponent> SphereMesh;
 
-	// Added to SphereCollider radius to make it more visible/responsive
+	/** Added to SphereCollider radius to make it more visible/responsive */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.0") )
 	float ColliderRadiusThreshold = 1.f;
 
-	// Affects size and speed of the Pawn
+	/** Affects size and speed of the Pawn */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.1") )
 	float Strength = 1.f;
 
-	// Affects Speed and Handling when moving
+	/** Affects Speed and Handling when moving */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.1") )
 	float Speed = 1.f;
 
-	/**
-	 * Used to multiply Speed stat for AddForce to keep the Stats clearer
-	 * Force = Direction * Speed / Strength * Coefficient
-	 */
+	/** Used to multiply Speed stat for AddForce to keep the Stats clearer */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" ) //meta advanced display
 	float SpeedCoefficient = 10000.f;
 };
