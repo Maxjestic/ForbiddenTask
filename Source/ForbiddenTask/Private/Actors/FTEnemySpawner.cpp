@@ -2,6 +2,7 @@
 
 #include "Actors/FTEnemySpawner.h"
 
+#include "Core/FTGameMode.h"
 #include "DataAssets/FTSpawnConfigDataAsset.h"
 #include "ForbiddenTask/FTLogChannels.h"
 #include "Kismet/GameplayStatics.h"
@@ -51,7 +52,13 @@ void AFTEnemySpawner::SpawningNormalMode() const
 		FT_LOG_ERROR( TEXT("Necessary data for Normal Spawn Mode missing!") );
 		return;
 	}
-
+	
+	AFTGameMode* GameMode = GetWorld()->GetAuthGameMode<AFTGameMode>();
+	if ( !GameMode )
+	{
+		FT_LOG_ERROR( TEXT("GameMode is invalid!") );
+	}
+	
 	for ( int32 i = 0; i < TotalEnemiesToSpawn; i++ )
 	{
 		const float RandomDistance = FMath::FRandRange( RadiusThreshold, SpawnRadius );
@@ -63,7 +70,11 @@ void AFTEnemySpawner::SpawningNormalMode() const
 		const float Strength = StrengthOverDistanceCurve->GetFloatValue( RandomDistance / SpawnRadius );
 		const float Speed = SpeedOverDistanceCurve->GetFloatValue( RandomDistance / SpawnRadius );
 
-		SpawnEnemy( SelectedEnemyClass, SpawnLocation, Strength, Speed );
+		int32 SpawnTries = 0;
+		while (!TrySpawnEnemy( SelectedEnemyClass, SpawnLocation, Strength, Speed, GameMode ))
+		{
+			if (++SpawnTries >= 20) break;
+		}
 	}
 }
 
@@ -77,6 +88,12 @@ void AFTEnemySpawner::SpawningDataAssetMode() const
 
 	float MinDistance = RadiusThreshold;
 
+	AFTGameMode* GameMode = GetWorld()->GetAuthGameMode<AFTGameMode>();
+	if ( !GameMode )
+	{
+		FT_LOG_ERROR( TEXT("GameMode is invalid!") );
+	}
+
 	for ( const FFTSpawnZoneInfo& ZoneInfo : SpawnConfig->SpawnZones )
 	{
 		for ( int32 i = 0; i < ZoneInfo.AmountToSpawn; i++ )
@@ -89,7 +106,12 @@ void AFTEnemySpawner::SpawningDataAssetMode() const
 
 			const float Strength = FMath::FRandRange( ZoneInfo.StrengthRange.Min, ZoneInfo.StrengthRange.Max );
 			const float Speed = FMath::FRandRange( ZoneInfo.SpeedRange.Min, ZoneInfo.SpeedRange.Max );
-			SpawnEnemy( SelectedEnemyClass, SpawnLocation, Strength, Speed );
+
+			int32 SpawnTries = 0;
+			while (!TrySpawnEnemy( SelectedEnemyClass, SpawnLocation, Strength, Speed, GameMode ))
+			{
+				if (++SpawnTries >= 20) break;
+			}
 		}
 		MinDistance += ZoneInfo.ZoneRadius;
 	}
@@ -126,8 +148,8 @@ FVector AFTEnemySpawner::PickRandomSpawnLocation( const float RandomDistance ) c
 	return SpawnLocation;
 }
 
-void AFTEnemySpawner::SpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
-                                  const float Strength, const float Speed ) const
+bool AFTEnemySpawner::TrySpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
+                                  const float Strength, const float Speed, AFTGameMode* GameMode ) const
 {
 	AFTEnemyPawn* SpawnedEnemy = GetWorld()->SpawnActor<AFTEnemyPawn>(
 		EnemyClass,
@@ -136,9 +158,10 @@ void AFTEnemySpawner::SpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, c
 	if ( SpawnedEnemy )
 	{
 		SpawnedEnemy->SetStats( Strength, Speed );
-		// TODO: Connect with GameMode for win condition
-		// TODO: Enemies can spawn on each other, return true and add while 
+		GameMode->RegisterEnemy( SpawnedEnemy );
+		return true;
 	}
+	return false;
 }
 
 #if WITH_EDITOR

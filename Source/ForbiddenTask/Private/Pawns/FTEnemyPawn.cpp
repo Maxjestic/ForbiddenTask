@@ -19,3 +19,9 @@ void AFTEnemyPawn::AttemptToConsume_Implementation( AFTPlayerPawn* PlayerPawn )
 	            *GetClass()->GetName()
 	);
 }
+
+void AFTEnemyPawn::EndPlay( const EEndPlayReason::Type EndPlayReason )
+{
+	Super::EndPlay( EndPlayReason );
+	OnPawnDied.Broadcast( this );
+}

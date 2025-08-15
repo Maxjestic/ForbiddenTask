@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "FTEnemySpawner.generated.h"
 
+class AFTGameMode;
 class UFTSpawnConfigDataAsset;
 
 UENUM( BlueprintType )
@@ -132,10 +133,12 @@ private:
 	 * @param SpawnLocation Location for spawn
 	 * @param Strength for the Enemy
 	 * @param Speed for the Enemy
+	 * @param GameMode used to register Enemy
+	 * @return if spawning was successful
 	 */
-	void SpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
+	bool TrySpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
 	                 const float Strength,
-	                 const float Speed ) const;
+	                 const float Speed, AFTGameMode* GameMode ) const;
 
 	FVector PlayerPosition = FVector::ZeroVector;
 

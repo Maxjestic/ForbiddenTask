@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "FTBasePawn.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPawnDiedSignature, AFTBasePawn*, DeadEnemy);
+
 class USphereComponent;
 
 /**
@@ -33,6 +35,8 @@ public:
 	
 	void SetStats(const float NewStrength, const float NewSpeed);
 
+	FOnPawnDiedSignature OnPawnDied;
+
 protected:
 	//~ Begin AActor Interface
 	virtual void OnConstruction( const FTransform& Transform ) override;
@@ -48,13 +52,17 @@ protected:
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
 	TObjectPtr<USphereComponent> SphereCollider;
 
-	/** Static Mesh used only as a visual representation */
+	/** SphereMesh used only as a visual representation */
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
 	TObjectPtr<UStaticMeshComponent> SphereMesh;
 
 	/** Added to SphereCollider radius to make it more visible/responsive */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.0") )
 	float ColliderRadiusThreshold = 1.f;
+
+	/** Base Scale for SphereMesh */
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.0") )
+	float BaseScale = 1.f;
 
 	/** Affects size and speed of the Pawn */
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (ClampMin = "0.0") )

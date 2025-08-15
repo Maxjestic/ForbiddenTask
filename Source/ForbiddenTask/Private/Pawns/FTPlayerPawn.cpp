@@ -5,7 +5,6 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/SphereComponent.h"
-#include "ForbiddenTask/FTLogChannels.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Interfaces/FTConsumable.h"
 
@@ -28,40 +27,43 @@ AFTPlayerPawn::AFTPlayerPawn()
 	Camera->SetOrthoWidth( 4000.f );
 }
 
-void AFTPlayerPawn::ChangeStats( const float SpeedChange, const float StrengthChange )
-{
-	Speed += SpeedChange;
-	Strength += StrengthChange;
-	//TODO: Handle case if either of stats is less than zero
-
-	UpdateSize();
-}
-
 void AFTPlayerPawn::AddSpeed( const float Value )
 {
 	Speed += Value;
-	//TODO: Handle 0
+	if ( Speed <= 0.f )
+	{
+		OnPawnDied.Broadcast( this );
+	}
 }
 
 void AFTPlayerPawn::AddStrength( const float Value )
 {
 	Strength += Value;
-	//TODO: Handle 0
-
+	if ( Strength <= 0.f )
+	{
+		OnPawnDied.Broadcast( this );
+		return;
+	}
 	UpdateSize();
 }
 
 void AFTPlayerPawn::SubtractSpeed( const float Value )
 {
 	Speed -= Value;
-	//TODO: Handle 0
+	if ( Speed <= 0.f )
+	{
+		OnPawnDied.Broadcast( this );
+	}
 }
 
 void AFTPlayerPawn::SubtractStrength( const float Value )
 {
 	Strength -= Value;
-	//TODO: Handle 0
-
+	if ( Strength <= 0.f )
+	{
+		OnPawnDied.Broadcast( this );
+		return;
+	}
 	UpdateSize();
 }
 

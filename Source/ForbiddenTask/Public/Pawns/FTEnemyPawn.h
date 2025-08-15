@@ -40,4 +40,9 @@ public:
 
 	//~ End IFTConsumable Interface
 
+protected:
+	//~ Begin AActor Interface
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	//~ End AActor Interface
+	
 };
