@@ -30,41 +30,25 @@ AFTPlayerPawn::AFTPlayerPawn()
 void AFTPlayerPawn::AddSpeed( const float Value )
 {
 	Speed += Value;
-	if ( Speed <= 0.f )
-	{
-		OnPawnDied.Broadcast( this );
-	}
+	SpeedCheck();
 }
 
 void AFTPlayerPawn::AddStrength( const float Value )
 {
 	Strength += Value;
-	if ( Strength <= 0.f )
-	{
-		OnPawnDied.Broadcast( this );
-		return;
-	}
-	UpdateSize();
+	StrengthCheck();
 }
 
 void AFTPlayerPawn::SubtractSpeed( const float Value )
 {
 	Speed -= Value;
-	if ( Speed <= 0.f )
-	{
-		OnPawnDied.Broadcast( this );
-	}
+	SpeedCheck();
 }
 
 void AFTPlayerPawn::SubtractStrength( const float Value )
 {
 	Strength -= Value;
-	if ( Strength <= 0.f )
-	{
-		OnPawnDied.Broadcast( this );
-		return;
-	}
-	UpdateSize();
+	StrengthCheck();
 }
 
 void AFTPlayerPawn::OnBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -75,4 +59,26 @@ void AFTPlayerPawn::OnBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor*
 	{
 		IFTConsumable::Execute_AttemptToConsume( OtherActor, this );
 	}
+}
+
+void AFTPlayerPawn::StrengthCheck()
+{
+	if ( Strength <= 0.f )
+	{
+		OnPawnDied.Broadcast( this );
+		return;
+	}
+	UpdateSize();
+	Strength = FMath::Clamp(Strength, 0.f, MaxStrength);
+	OnStrengthChanged.Broadcast( Strength );
+}
+
+void AFTPlayerPawn::SpeedCheck()
+{	
+	if ( Speed <= 0.f )
+	{
+		OnPawnDied.Broadcast( this );
+	}
+	Speed = FMath::Clamp(Speed, 0.f, MaxSpeed);
+	OnSpeedChanged.Broadcast( Speed );
 }

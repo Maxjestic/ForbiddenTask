@@ -32,6 +32,7 @@ public:
 	virtual void HandleMovement( const FVector& ForceDirection );
 	
 	FORCEINLINE float GetStrength() const { return Strength; };
+	FORCEINLINE float GetSpeed() const { return Speed; };
 	
 	void SetStats(const float NewStrength, const float NewSpeed);
 

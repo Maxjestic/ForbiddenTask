@@ -9,6 +9,8 @@
 class UCameraComponent;
 class USpringArmComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnStatChanged, float, NewValue );
+
 /**
  * Represents the player-controlled pawn in the game, inheriting from AFTBasePawn.
  * Provides functionality for player movement, collision and altering stats.
@@ -39,6 +41,16 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void SubtractStrength( const float Value );
 
+	FORCEINLINE float GetMaxStrength() const { return MaxStrength; };
+	
+	FORCEINLINE float GetMaxSpeed() const { return MaxSpeed; };
+
+	/** Delegate for when Strength is changed */
+	FOnStatChanged OnStrengthChanged;
+	
+	/** Delegate for when Speed is changed */
+	FOnStatChanged OnSpeedChanged;
+
 protected:
 	/** Callback for SphereCollider OnComponentBeginOverlap delegate */
 	UFUNCTION()
@@ -51,4 +63,17 @@ protected:
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "Components" )
 	TObjectPtr<UCameraComponent> Camera;
 
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
+	float MaxStrength = 100.f;
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite, Category = "Stats" )
+	float MaxSpeed = 100.f;
+
+private:
+	/** Check Strength after change and performs necessary actions */
+	void StrengthCheck();
+	
+	/** Check Strength after change and performs necessary actions */
+	void SpeedCheck();
+	
 };

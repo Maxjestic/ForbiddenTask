@@ -5,13 +5,16 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Core/FTGameInstance.h"
+#include "ForbiddenTask/FTLogChannels.h"
 #include "Pawns/FTPlayerPawn.h"
+#include "UI/FTHUDWidget.h"
 
 void AFTPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	if ( UEnhancedInputLocalPlayerSubsystem* InputSubsystem = ULocalPlayer::GetSubsystem<
-		UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()) )
+		UEnhancedInputLocalPlayerSubsystem>( GetLocalPlayer() ) )
 	{
 		InputSubsystem->AddMappingContext( DefaultInputMappingContext, 0 );
 	}
@@ -31,7 +34,8 @@ void AFTPlayerController::SetupInputComponent()
 void AFTPlayerController::OnPossess( APawn* InPawn )
 {
 	Super::OnPossess( InPawn );
-	ControlledPawn = Cast<AFTBasePawn>( InPawn );
+	ControlledPawn = Cast<AFTPlayerPawn>( InPawn );
+	SetupHUDWidget();
 }
 
 void AFTPlayerController::OnUnPossess()
@@ -53,12 +57,31 @@ void AFTPlayerController::OnMoveTriggered()
 	{
 		return;
 	}
-	
+
 	const FVector TargetPosition = FMath::LinePlaneIntersection( MouseWorldLocation,
-															MouseWorldLocation + MouseWorldDirection * 10000.f,
-															FVector::ZeroVector,
-															FVector::UpVector );
-	
-	const FVector MovementDirection = (TargetPosition - ControlledPawn->GetActorLocation() ).GetSafeNormal2D();
+	                                                             MouseWorldLocation + MouseWorldDirection * 10000.f,
+	                                                             FVector::ZeroVector,
+	                                                             FVector::UpVector );
+
+	const FVector MovementDirection = ( TargetPosition - ControlledPawn->GetActorLocation() ).GetSafeNormal2D();
 	ControlledPawn->HandleMovement( MovementDirection );
+}
+
+void AFTPlayerController::SetupHUDWidget()
+{
+	const UFTGameInstance* GameInstance = GetGameInstance<UFTGameInstance>();
+	if ( !GameInstance )
+	{
+		FT_LOG_ERROR( TEXT("Wrong Game Instance") )
+	}
+
+	if ( UFTHUDWidget* HUDWidget = CreateWidget<UFTHUDWidget>( this, GameInstance->HUDWidgetClass ) )
+	{
+		HUDWidget->BindToPlayerDelegates( ControlledPawn );
+		HUDWidget->AddToViewport();
+	}
+	else
+	{
+		FT_LOG_ERROR( TEXT("Failed to create HUD Widget") )
+	}
 }

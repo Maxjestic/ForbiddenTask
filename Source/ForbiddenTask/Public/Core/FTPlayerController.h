@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "FTPlayerController.generated.h"
 
-class AFTBasePawn;
+class AFTPlayerPawn;
 class UInputAction;
 class UInputMappingContext;
 
@@ -42,7 +42,10 @@ protected:
 	TObjectPtr<UInputAction> MoveAction;
 
 private:
+	/** Creates HUDWidget and sets it up */
+	void SetupHUDWidget();
+	
 	/** Cached ControlledPawn only for movement purposes */
 	UPROPERTY()
-	TObjectPtr<AFTBasePawn> ControlledPawn;
+	TObjectPtr<AFTPlayerPawn> ControlledPawn;
 };

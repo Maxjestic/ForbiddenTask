@@ -3,6 +3,7 @@
 	<s:String x:Key="/Default/CodeStyle/Naming/CppNamingOptions/Abbreviations/=BTFT/@EntryIndexedValue">BTFT</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CppNamingOptions/Abbreviations/=FTAI/@EntryIndexedValue">FTAI</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CppNamingOptions/Abbreviations/=FTBT/@EntryIndexedValue">FTBT</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CppNamingOptions/Abbreviations/=FTHUD/@EntryIndexedValue">FTHUD</s:String>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EFeature_002EServices_002ECpp_002ECodeStyle_002ENaming_002ECppNamingOptionsMigration/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=btft/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=ftai/@EntryIndexedValue">True</s:Boolean>
