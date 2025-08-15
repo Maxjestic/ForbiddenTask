@@ -19,6 +19,10 @@ UCLASS()
 class FORBIDDENTASK_API AFTPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	/** After Game Ends shows the Widget with proper text */
+	void ShowEndScreen(const bool bPlayerWon);
 	
 protected:
 	//~ Begin AActor Interface

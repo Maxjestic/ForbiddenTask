@@ -3,7 +3,9 @@
 
 #include "Core/FTGameMode.h"
 
+#include "Core/FTPlayerController.h"
 #include "ForbiddenTask/FTLogChannels.h"
+#include "Kismet/GameplayStatics.h"
 #include "Pawns/FTBasePawn.h"
 
 void AFTGameMode::RegisterEnemy( AFTBasePawn* NewEnemy )
@@ -59,7 +61,7 @@ void AFTGameMode::HandlePlayerDeath( AFTBasePawn* DeadPlayer )
 	EndGame( false );
 }
 
-void AFTGameMode::EndGame( const bool bIsWinner )
+void AFTGameMode::EndGame( const bool bPlayerWon )
 {
 	if ( bIsGameOver )
 	{
@@ -67,10 +69,9 @@ void AFTGameMode::EndGame( const bool bIsWinner )
 	}
 	bIsGameOver = true;
 
-	if ( bIsWinner )
+	if (AFTPlayerController* PlayerController = Cast<AFTPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
 	{
-		FT_LOG_INFO( TEXT("Won!") )
-		return;
+		// Tell the controller to handle the UI.
+		PlayerController->ShowEndScreen(bPlayerWon);
 	}
-	FT_LOG_INFO( TEXT("Lost!") )
 }

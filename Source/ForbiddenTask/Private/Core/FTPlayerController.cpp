@@ -8,7 +8,22 @@
 #include "Core/FTGameInstance.h"
 #include "ForbiddenTask/FTLogChannels.h"
 #include "Pawns/FTPlayerPawn.h"
+#include "UI/FTEndGameWidget.h"
 #include "UI/FTHUDWidget.h"
+
+void AFTPlayerController::ShowEndScreen( const bool bPlayerWon )
+{
+	if ( UFTEndGameWidget* EndScreenWidget = CreateWidget<UFTEndGameWidget>(
+		this,
+		GetGameInstance()->EndScreenWidgetClass ) )
+	{
+		EndScreenWidget->UpdateEndScreenText( bPlayerWon );
+		EndScreenWidget->AddToViewport();
+		SetPause( true );
+
+		SetInputMode( FInputModeUIOnly() );
+	}
+}
 
 void AFTPlayerController::BeginPlay()
 {
@@ -72,7 +87,6 @@ void AFTPlayerController::OnPause()
 {
 	if ( UUserWidget* PauseMenu = CreateWidget<UUserWidget>( this, GetGameInstance()->PauseMenuWidgetClass ) )
 	{
-		FT_LOG_WARNING( TEXT("PAUSE TRIGGERED") )
 		PauseMenu->AddToViewport();
 		SetPause( true );
 		SetInputMode( FInputModeUIOnly() );

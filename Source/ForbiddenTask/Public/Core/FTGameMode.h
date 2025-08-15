@@ -37,9 +37,9 @@ private:
 
 	/**
 	 * Handle End of the game
-	 * @param bIsWinner Information if the Player won or lost
+	 * @param bPlayerWon Information if the Player won or lost
 	 */
-	void EndGame( const bool bIsWinner );
+	void EndGame( const bool bPlayerWon );
 
 	int32 AliveEnemies = 0;
 
