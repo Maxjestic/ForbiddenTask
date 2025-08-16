@@ -7,7 +7,8 @@
 #include "FTBTService_SetRandomMoveDirection.generated.h"
 
 /**
- * Behavior Tree service used to set a random move direction
+ * A BT Service that periodically calculates a new random direction
+ * and stores it in a FVector Blackboard key.
  */
 UCLASS()
 class FORBIDDENTASK_API UFTBTService_SetRandomMoveDirection : public UBTService
@@ -15,10 +16,7 @@ class FORBIDDENTASK_API UFTBTService_SetRandomMoveDirection : public UBTService
 	GENERATED_BODY()
 	
 public:
-	/**
-	 * Default Constructor
-	 * Sets Node Name
-	 */
+	/** Sets the default node name and update interval. */
 	UFTBTService_SetRandomMoveDirection();
 	
 protected:
@@ -26,7 +24,7 @@ protected:
 	virtual void TickNode( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds ) override;
 	//~ End UBTAuxiliaryNode Interface
 
-	/** Blackboard Key to avoid using string literals */
+    /** The Blackboard key to write the random FVector direction to. */
 	UPROPERTY(EditAnywhere, Category="Blackboard")
 	FBlackboardKeySelector MoveDirectionKey;
 };

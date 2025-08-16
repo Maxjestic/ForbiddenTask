@@ -133,9 +133,7 @@ private:
 #if WITH_EDITOR
 
 public:
-	/**
-	 * Keeps Max <= Min for StatRanges
-	 */
+	/** Keeps Max <= Min in StatRanges */
 	virtual void PostEditChangeProperty( FPropertyChangedEvent& PropertyChangedEvent ) override;
 #endif
 };

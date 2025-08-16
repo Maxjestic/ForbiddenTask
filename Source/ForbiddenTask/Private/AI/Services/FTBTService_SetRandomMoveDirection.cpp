@@ -17,12 +17,16 @@ void UFTBTService_SetRandomMoveDirection::TickNode( UBehaviorTreeComponent& Owne
                                                     float DeltaSeconds )
 {
 	Super::TickNode( OwnerComp, NodeMemory, DeltaSeconds );
-
-	FT_LOG_WARNING( TEXT("BTSERVICE_RANDOMDIR") )
+	
+	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
+	if (!BlackboardComp)
+	{
+		return;
+	}
 
 	const float RandomAngle = FMath::FRandRange( 0.f, 360.f );
 	const float AngleRadians = FMath::DegreesToRadians( RandomAngle );
 	const FVector Direction = FVector( FMath::Cos( AngleRadians ), FMath::Sin( AngleRadians ), 0.f );
 
-	OwnerComp.GetBlackboardComponent()->SetValueAsVector( MoveDirectionKey.SelectedKeyName, Direction );
+	BlackboardComp->SetValueAsVector( MoveDirectionKey.SelectedKeyName, Direction );
 }
