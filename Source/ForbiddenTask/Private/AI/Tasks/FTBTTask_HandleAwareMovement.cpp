@@ -5,8 +5,13 @@
 
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "ForbiddenTask/FTLogChannels.h"
 #include "Pawns/FTBasePawn.h"
+
+struct FHandleAwareMovementMemory
+{
+	TWeakObjectPtr<AFTBasePawn> AIPawn;
+	TWeakObjectPtr<AFTBasePawn> PlayerPawn;
+};
 
 UFTBTTask_HandleAwareMovement::UFTBTTask_HandleAwareMovement()
 {
@@ -27,8 +32,39 @@ FString UFTBTTask_HandleAwareMovement::GetStaticDescription() const
 	}
 }
 
+uint16 UFTBTTask_HandleAwareMovement::GetInstanceMemorySize() const
+{
+	return sizeof( FHandleAwareMovementMemory );
+}
+
 EBTNodeResult::Type UFTBTTask_HandleAwareMovement::ExecuteTask( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory )
 {
+	const AAIController* AIController = OwnerComp.GetAIOwner();
+	if ( !AIController )
+	{
+		return EBTNodeResult::Failed;
+	}
+	
+	FHandleAwareMovementMemory* Memory = reinterpret_cast<FHandleAwareMovementMemory*>(NodeMemory);
+
+	Memory->AIPawn = Cast<AFTBasePawn>( AIController->GetPawn() );
+	if ( !Memory->AIPawn.IsValid() )
+	{
+		return EBTNodeResult::Failed;
+	}
+
+	const UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
+	if ( !BlackboardComp )
+	{
+		return EBTNodeResult::Failed;
+	}
+
+	Memory->PlayerPawn = Cast<AFTBasePawn>( BlackboardComp->GetValueAsObject( PlayerPawnKey.SelectedKeyName ) );
+	if ( !Memory->PlayerPawn.IsValid() )
+	{
+		return EBTNodeResult::Failed;
+	}
+
 	return EBTNodeResult::InProgress;
 }
 
@@ -36,27 +72,10 @@ void UFTBTTask_HandleAwareMovement::TickTask( UBehaviorTreeComponent& OwnerComp,
 {
 	Super::TickTask( OwnerComp, NodeMemory, DeltaSeconds );
 
-	const AAIController* AIController = OwnerComp.GetAIOwner();
-	if ( !AIController )
-	{
-		FT_LOG_WARNING( TEXT("AIController nullptr!") )
-		FinishLatentTask( OwnerComp, EBTNodeResult::Failed );
-		return;
-	}
+	const FHandleAwareMovementMemory* Memory = reinterpret_cast<FHandleAwareMovementMemory*>(NodeMemory);
 
-	AFTBasePawn* AIPawn = Cast<AFTBasePawn>( AIController->GetPawn() );
-	if ( !AIPawn )
+	if ( !Memory->AIPawn.IsValid() || !Memory->PlayerPawn.IsValid() )
 	{
-		FT_LOG_WARNING( TEXT("AIPawn nullptr!") )
-		FinishLatentTask( OwnerComp, EBTNodeResult::Failed );
-		return;
-	}
-
-	const AFTBasePawn* PlayerPawn = Cast<AFTBasePawn>(
-		OwnerComp.GetBlackboardComponent()->GetValueAsObject( PlayerPawnKey.SelectedKeyName ) );
-	if ( !PlayerPawn )
-	{
-		FT_LOG_WARNING( TEXT("PlayerPawn nullptr!") )
 		FinishLatentTask( OwnerComp, EBTNodeResult::Failed );
 		return;
 	}
@@ -65,15 +84,12 @@ void UFTBTTask_HandleAwareMovement::TickTask( UBehaviorTreeComponent& OwnerComp,
 	switch ( AwareMovementMode )
 	{
 	case EFTAwareMovementMode::Flee:
-		MovementVector = ( AIPawn->GetActorLocation() - PlayerPawn->GetActorLocation() );
+		MovementVector = ( Memory->AIPawn->GetActorLocation() - Memory->PlayerPawn->GetActorLocation() );
 		break;
 	case EFTAwareMovementMode::Chase:
-		MovementVector = ( PlayerPawn->GetActorLocation() - AIPawn->GetActorLocation() );
+		MovementVector = ( Memory->PlayerPawn->GetActorLocation() - Memory->AIPawn->GetActorLocation() );
 		break;
-	default:
-		FT_LOG_WARNING( TEXT("Unknown AwareMovementMode!") )
-		FinishLatentTask( OwnerComp, EBTNodeResult::Failed );
-		return;
 	}
-	AIPawn->HandleMovement( MovementVector.GetSafeNormal2D() );
+
+	Memory->AIPawn->HandleMovement( MovementVector.GetSafeNormal() );
 }
