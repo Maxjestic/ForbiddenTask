@@ -9,7 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnStatChanged, float, NewValue );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnPlayerStatChanged, float, NewValue );
 
 /**
  * Represents the player-controlled pawn in the game, inheriting from AFTBasePawn.
@@ -22,11 +22,7 @@ class FORBIDDENTASK_API AFTPlayerPawn : public AFTBasePawn
 	GENERATED_BODY()
 
 public:
-	/**
-	 * Default Constructor
-	 * Binds function to SphereMesh overlap delegate
-	 * Creates and sets default values for SpringArm and Camera
-	 */
+	/** Sets up player-specific components and default values. */
 	AFTPlayerPawn();
 
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
@@ -41,15 +37,19 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void SubtractStrength( const float Value );
 
+	UFUNCTION( BLueprintPure, Category = "Stats" )
 	FORCEINLINE float GetMaxStrength() const { return MaxStrength; };
-	
+
+	UFUNCTION( BlueprintPure, Category = "Stats" )
 	FORCEINLINE float GetMaxSpeed() const { return MaxSpeed; };
 
-	/** Delegate for when Strength is changed */
-	FOnStatChanged OnStrengthChanged;
-	
-	/** Delegate for when Speed is changed */
-	FOnStatChanged OnSpeedChanged;
+	/** Delegate broadcast when Strength changes. Passes the new current strength. */
+	UPROPERTY( BlueprintAssignable, Category = "Events" )
+	FOnPlayerStatChanged OnStrengthChanged;
+
+	/** Delegate broadcast when Speed changes. Passes the new current speed. */
+	UPROPERTY( BlueprintAssignable, Category = "Events" )
+	FOnPlayerStatChanged OnSpeedChanged;
 
 protected:
 	/** Callback for SphereCollider OnComponentBeginOverlap delegate */
@@ -72,8 +72,10 @@ protected:
 private:
 	/** Check Strength after change and performs necessary actions */
 	void StrengthCheck();
-	
+
 	/** Check Strength after change and performs necessary actions */
 	void SpeedCheck();
-	
+
+	/** To ensure death broadcast only happens once. */
+	bool bIsAlive = true;
 };

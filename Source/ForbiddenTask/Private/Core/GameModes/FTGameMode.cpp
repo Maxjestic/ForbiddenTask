@@ -3,6 +3,7 @@
 #include "Core/GameModes/FTGameMode.h"
 
 #include "Core/FTPlayerController.h"
+#include "ForbiddenTask/FTLogChannels.h"
 #include "Kismet/GameplayStatics.h"
 #include "Pawns/FTBasePawn.h"
 
@@ -49,7 +50,7 @@ void AFTGameMode::HandlePlayerDeath( AFTBasePawn* DeadPlayer )
 	{
 		return;
 	}
-	
+
 	DeadPlayer->OnPawnDied.RemoveDynamic( this, &AFTGameMode::HandlePlayerDeath );
 
 	EndGame( false );
@@ -63,8 +64,11 @@ void AFTGameMode::EndGame( const bool bPlayerWon )
 	}
 	bIsGameOver = true;
 
-	if (AFTPlayerController* PlayerController = Cast<AFTPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	FT_LOG_WARNING( TEXT("--- GAME OVER --- Player %s"), bPlayerWon ? TEXT("Won!") : TEXT("Lost!") );
+
+	if ( AFTPlayerController* PlayerController = Cast<AFTPlayerController>(
+		UGameplayStatics::GetPlayerController( this, 0 ) ) )
 	{
-		PlayerController->ShowEndScreen(bPlayerWon);
+		PlayerController->ShowEndScreen( bPlayerWon );
 	}
 }

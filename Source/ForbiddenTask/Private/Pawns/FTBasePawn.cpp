@@ -3,7 +3,6 @@
 #include "Pawns/FTBasePawn.h"
 
 #include "Components/SphereComponent.h"
-#include "ForbiddenTask/FTLogChannels.h"
 
 AFTBasePawn::AFTBasePawn()
 {
@@ -28,8 +27,8 @@ void AFTBasePawn::OnConstruction( const FTransform& Transform )
 
 void AFTBasePawn::SetStats( const float NewStrength, const float NewSpeed )
 {
-	Strength = FMath::Clamp( NewStrength, 0.f, NewStrength );
-	Speed = FMath::Clamp( NewSpeed, 0.f, NewSpeed );
+	Strength = FMath::Max( 0.f, NewStrength );
+	Speed = FMath::Max( 0.f, NewSpeed );
 	UpdateSize();
 }
 

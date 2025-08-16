@@ -19,35 +19,37 @@ void UFTBTService_UpdateEngagement::TickNode( UBehaviorTreeComponent& OwnerComp,
 	Super::TickNode( OwnerComp, NodeMemory, DeltaSeconds );
 
 	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
-	if (!BlackboardComp)
+	if ( !BlackboardComp )
 	{
 		return;
 	}
-	
+
 	const APawn* PlayerPawn = Cast<APawn>(
 		OwnerComp.GetBlackboardComponent()->GetValueAsObject( PlayerPawnKey.SelectedKeyName ) );
 	const APawn* AIPawn = OwnerComp.GetAIOwner()->GetPawn();
 	if ( !PlayerPawn || !AIPawn )
 	{
-		BlackboardComp->SetValueAsBool(IsEngagedKey.SelectedKeyName, false);
+		BlackboardComp->SetValueAsBool( IsEngagedKey.SelectedKeyName, false );
 		return;
 	}
 
 	const float Distance = FVector::Dist( PlayerPawn->GetActorLocation(), AIPawn->GetActorLocation() );
-	const bool bIsCurrentlyEngaged = BlackboardComp->GetValueAsBool(IsEngagedKey.SelectedKeyName);
+	const bool bIsCurrentlyEngaged = BlackboardComp->GetValueAsBool( IsEngagedKey.SelectedKeyName );
 
 	if ( bIsCurrentlyEngaged )
 	{
 		if ( Distance > LoseInterestRadius )
 		{
-			BlackboardComp->SetValueAsBool(IsEngagedKey.SelectedKeyName, false);
+			BlackboardComp->SetValueAsBool( IsEngagedKey.SelectedKeyName, false );
+			FT_LOG_INFO( TEXT("AI '%s' DISENGAGED (Player too far)."), *AIPawn->GetName() );
 		}
 	}
 	else
 	{
 		if ( Distance < AwarenessRadius )
 		{
-			BlackboardComp->SetValueAsBool(IsEngagedKey.SelectedKeyName, true);
+			BlackboardComp->SetValueAsBool( IsEngagedKey.SelectedKeyName, true );
+			FT_LOG_INFO( TEXT("AI '%s' ENGAGED (Player too close)."), *AIPawn->GetName() );
 		}
 	}
 }

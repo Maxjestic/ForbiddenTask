@@ -4,6 +4,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/SphereComponent.h"
+#include "ForbiddenTask/FTLogChannels.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Interfaces/FTConsumable.h"
 
@@ -62,22 +63,25 @@ void AFTPlayerPawn::OnBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor*
 
 void AFTPlayerPawn::StrengthCheck()
 {
-	if ( Strength <= 0.f )
-	{
-		OnPawnDied.Broadcast( this );
-		return;
-	}
+	Strength = FMath::Clamp( Strength, 0.f, MaxStrength );
 	UpdateSize();
-	Strength = FMath::Clamp(Strength, 0.f, MaxStrength);
 	OnStrengthChanged.Broadcast( Strength );
+	if ( bIsAlive && Strength <= 0.f )
+	{
+		bIsAlive = false;
+		FT_LOG_WARNING( TEXT("Player Pawn '%s' has died."), *GetName() );
+		OnPawnDied.Broadcast( this );
+	}
 }
 
 void AFTPlayerPawn::SpeedCheck()
-{	
-	if ( Speed <= 0.f )
+{
+	Speed = FMath::Clamp( Speed, 0.f, MaxSpeed );
+	OnSpeedChanged.Broadcast( Speed );
+	if ( bIsAlive && Speed <= 0.f )
 	{
+		bIsAlive = false;
+		FT_LOG_WARNING( TEXT("Player Pawn '%s' has died."), *GetName() );
 		OnPawnDied.Broadcast( this );
 	}
-	Speed = FMath::Clamp(Speed, 0.f, MaxSpeed);
-	OnSpeedChanged.Broadcast( Speed );
 }
