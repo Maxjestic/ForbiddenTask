@@ -54,9 +54,12 @@ protected:
 	TObjectPtr<UInputAction> PauseAction;
 
 private:
-	/** Creates HUDWidget and sets it up */
-	void SetupHUDWidget();
+	/** Handle Pausing */
+	void HandlePause();
 
+	/** Handle Unpausing */
+	void HandleUnpause();
+	
 	/** Lazy loading for the Game Instance */
 	UFTGameInstance* GetGameInstance();
 	
@@ -67,4 +70,8 @@ private:
 	/** Cached GameInstance used for creating widgets */
 	UPROPERTY()
 	TObjectPtr<UFTGameInstance> GameInstance = nullptr;
+
+	/** Handle for Pause Menu Widget */
+	UPROPERTY()
+	TObjectPtr<UUserWidget> PauseMenu;
 };

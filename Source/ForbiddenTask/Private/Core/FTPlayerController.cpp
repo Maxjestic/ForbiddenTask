@@ -50,7 +50,6 @@ void AFTPlayerController::OnPossess( APawn* InPawn )
 {
 	Super::OnPossess( InPawn );
 	ControlledPawn = Cast<AFTPlayerPawn>( InPawn );
-	SetupHUDWidget();
 }
 
 void AFTPlayerController::OnUnPossess()
@@ -84,25 +83,50 @@ void AFTPlayerController::OnMoveTriggered()
 
 void AFTPlayerController::OnPause()
 {
-	if ( UUserWidget* PauseMenu = CreateWidget<UUserWidget>( this, GetGameInstance()->PauseMenuWidgetClass ) )
+	if ( PauseMenu && PauseMenu->IsInViewport() )
 	{
-		PauseMenu->AddToViewport();
-		SetPause( true );
-		SetInputMode( FInputModeUIOnly() );
-	}
-}
-
-void AFTPlayerController::SetupHUDWidget()
-{
-	if ( UFTHUDWidget* HUDWidget = CreateWidget<UFTHUDWidget>( this, GetGameInstance()->HUDWidgetClass ) )
-	{
-		HUDWidget->BindToPlayerDelegates( ControlledPawn );
-		HUDWidget->AddToViewport();
+		HandleUnpause();
 	}
 	else
 	{
-		FT_LOG_ERROR( TEXT("Failed to create HUD Widget") )
+		HandlePause();
 	}
+}
+
+void AFTPlayerController::HandlePause()
+{
+	if ( !GetGameInstance()->PauseMenuWidgetClass )
+	{
+		FT_LOG_ERROR( TEXT("Pause Menu Widget Class is invalid!") );
+		return;
+	}
+	
+	PauseMenu = CreateWidget<UUserWidget>( this, GameInstance->PauseMenuWidgetClass );
+	if ( !PauseMenu )
+	{
+		FT_LOG_ERROR( TEXT("Failed to create Pause Menu Widget") );
+		return;
+	}
+	PauseMenu->AddToViewport();
+
+	SetPause( true );
+
+	FInputModeGameAndUI InputModeData;
+	InputModeData.SetWidgetToFocus(PauseMenu->TakeWidget());
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	InputModeData.SetHideCursorDuringCapture( false );
+	
+	SetInputMode( InputModeData );
+}
+
+void AFTPlayerController::HandleUnpause()
+{
+	PauseMenu->RemoveFromParent();
+	PauseMenu = nullptr;
+
+	SetPause( false );
+	SetInputMode( FInputModeGameAndUI() );
+	bShowMouseCursor = true;
 }
 
 UFTGameInstance* AFTPlayerController::GetGameInstance()

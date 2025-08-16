@@ -13,8 +13,6 @@
  *
  * This class defines behavior for enemy pawns that can be "consumed" by player pawns.
  * It contains stats related to the benefits or penalties it provides upon consumption.
- * 
- * TODO: Add delegate for death
  */
 UCLASS( Blueprintable )
 class FORBIDDENTASK_API AFTEnemyPawn : public AFTBasePawn, public IFTConsumable
