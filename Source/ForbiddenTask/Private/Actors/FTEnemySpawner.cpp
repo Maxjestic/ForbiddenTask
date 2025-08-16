@@ -2,7 +2,7 @@
 
 #include "Actors/FTEnemySpawner.h"
 
-#include "Core/FTGameMode.h"
+#include "Core/GameModes/FTGameMode.h"
 #include "DataAssets/FTSpawnConfigDataAsset.h"
 #include "ForbiddenTask/FTLogChannels.h"
 #include "Kismet/GameplayStatics.h"

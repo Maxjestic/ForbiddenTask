@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Copyright Maxjestic
 
-
-#include "Core/FTGameMode.h"
+#include "Core/GameModes/FTGameMode.h"
 
 #include "Core/FTPlayerController.h"
 #include "ForbiddenTask/FTLogChannels.h"
