@@ -7,8 +7,8 @@
 #include "FTAIController.generated.h"
 
 /**
- * AI Controller used for all enemies in the game
- * Runs the Behavior Tree that drives AI Logic
+ * The primary AI Controller for all enemies.
+ * Responsible for running the Behavior Tree that drives all logic.
  */
 UCLASS()
 class FORBIDDENTASK_API AFTAIController : public AAIController
@@ -20,7 +20,7 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 	//~ End AController Interface
 
-    /** The Behavior Tree that defines AI logic */
+    /** The Behavior Tree asset to run when this controller possesses a pawn. */
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 };

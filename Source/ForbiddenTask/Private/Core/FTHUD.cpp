@@ -24,6 +24,7 @@ void AFTHUD::BeginPlay()
 	if ( !GameInstance )
 	{
 		FT_LOG_ERROR( TEXT("Game Instance is invalid!") );
+		return;
 	}
 
 	HUDWidget = CreateWidget<UFTHUDWidget>( PlayerController, GameInstance->HUDWidgetClass );

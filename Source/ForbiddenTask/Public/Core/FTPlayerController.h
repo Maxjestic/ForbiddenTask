@@ -12,8 +12,8 @@ class UInputAction;
 class UInputMappingContext;
 
 /**
- * Base class for PlayerController in the ForbiddenTask project
- * Handles Movement - When mouse button pressed player should follow the mouse
+ * The primary PlayerController for the game.
+ * Handles player input for movement and UI interactions like pausing.
  */
 UCLASS()
 class FORBIDDENTASK_API AFTPlayerController : public APlayerController
@@ -21,7 +21,7 @@ class FORBIDDENTASK_API AFTPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
-	/** After Game Ends shows the Widget with proper text */
+    /** Creates and displays the end-game UI widget. Called by the GameMode. */
 	void ShowEndScreen(const bool bPlayerWon);
 	
 protected:
@@ -35,29 +35,29 @@ protected:
 	virtual void OnUnPossess() override;
 	//~ Begin APlayerController Interface
 
-	/** Callback for MoveAction Trigger Delegate */
-	void OnMoveTriggered();
-
-	/** Callback for PauseAction Trigger Delegate */
-	void OnPause();
-
-	/** Default Input Mapping Context used by this controller to handle movement */
+    /** The default Input Mapping Context, containing all core input actions. */
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input" )
 	TObjectPtr<UInputMappingContext> DefaultInputMappingContext;
 
-	/** Move action that is responsible for triggering movement logic */
+    /** Input Action for player movement. */
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input|Actions" )
 	TObjectPtr<UInputAction> MoveAction;
 
-	/** Pause action that is responsible for triggering pause */
+    /** Input Action for pausing the game. */
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input|Actions" )
 	TObjectPtr<UInputAction> PauseAction;
 
 private:
-	/** Handle Pausing */
+    /** Called continuously while the move input is active. */
+	void OnMoveTriggered();
+
+    /** Called once when the pause input is pressed. Toggles the pause state. */
+	void OnPause();
+	
+    /** Creates the pause menu and pauses the game. */
 	void HandlePause();
 
-	/** Handle Unpausing */
+    /** Removes the pause menu and unpauses the game. */
 	void HandleUnpause();
 	
 	/** Lazy loading for the Game Instance */
@@ -69,7 +69,7 @@ private:
 
 	/** Cached GameInstance used for creating widgets */
 	UPROPERTY()
-	TObjectPtr<UFTGameInstance> GameInstance = nullptr;
+	TObjectPtr<UFTGameInstance> CachedGameInstance = nullptr;
 
 	/** Handle for Pause Menu Widget */
 	UPROPERTY()

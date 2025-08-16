@@ -3,7 +3,6 @@
 #include "Core/GameModes/FTGameMode.h"
 
 #include "Core/FTPlayerController.h"
-#include "ForbiddenTask/FTLogChannels.h"
 #include "Kismet/GameplayStatics.h"
 #include "Pawns/FTBasePawn.h"
 
@@ -15,19 +14,15 @@ void AFTGameMode::RegisterEnemy( AFTBasePawn* NewEnemy )
 	}
 
 	AliveEnemies++;
-	FT_LOG_INFO( TEXT("Enemy %d registered"), AliveEnemies )
-	NewEnemy->OnPawnDied.AddDynamic( this, &AFTGameMode::AFTGameMode::HandleEnemyDied );
+	NewEnemy->OnPawnDied.AddDynamic( this, &AFTGameMode::HandleEnemyDied );
 }
 
 void AFTGameMode::HandleStartingNewPlayer_Implementation( APlayerController* NewPlayer )
 {
 	Super::HandleStartingNewPlayer_Implementation( NewPlayer );
 
-	FT_LOG_INFO( TEXT("OnPostLogin"), AliveEnemies )
-
 	if ( AFTBasePawn* PlayerPawn = Cast<AFTBasePawn>( NewPlayer->GetPawn() ) )
 	{
-		FT_LOG_INFO( TEXT("Player registered"), AliveEnemies )
 		PlayerPawn->OnPawnDied.AddDynamic( this, &AFTGameMode::HandlePlayerDeath );
 	}
 }
@@ -39,10 +34,9 @@ void AFTGameMode::HandleEnemyDied( AFTBasePawn* DeadEnemy )
 		return;
 	}
 
-	DeadEnemy->OnPawnDied.RemoveDynamic( this, &AFTGameMode::AFTGameMode::HandleEnemyDied );
+	DeadEnemy->OnPawnDied.RemoveDynamic( this, &AFTGameMode::HandleEnemyDied );
 
-	--AliveEnemies;
-	FT_LOG_INFO( TEXT("Enemy died. Enemies left: %d"), AliveEnemies )
+	AliveEnemies--;
 	if ( AliveEnemies <= 0 )
 	{
 		EndGame( true );
@@ -55,6 +49,7 @@ void AFTGameMode::HandlePlayerDeath( AFTBasePawn* DeadPlayer )
 	{
 		return;
 	}
+	
 	DeadPlayer->OnPawnDied.RemoveDynamic( this, &AFTGameMode::HandlePlayerDeath );
 
 	EndGame( false );
@@ -70,7 +65,6 @@ void AFTGameMode::EndGame( const bool bPlayerWon )
 
 	if (AFTPlayerController* PlayerController = Cast<AFTPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
 	{
-		// Tell the controller to handle the UI.
 		PlayerController->ShowEndScreen(bPlayerWon);
 	}
 }

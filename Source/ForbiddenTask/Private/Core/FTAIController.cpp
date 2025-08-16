@@ -6,7 +6,7 @@ void AFTAIController::OnPossess( APawn* InPawn )
 {
 	Super::OnPossess( InPawn );
 
-	if ( BehaviorTree )
+	if ( ensureMsgf(BehaviorTree, TEXT("Behavior Tree asset not assigned in %s!"), *GetName()) )
 	{
 		RunBehaviorTree( BehaviorTree );
 	}

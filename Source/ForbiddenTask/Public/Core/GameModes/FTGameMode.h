@@ -18,7 +18,7 @@ class FORBIDDENTASK_API AFTGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	/** Called when Enemy gets spawned used to bind callback to OnDeath */
+    /** Called by the spawner to register a new enemy with the Game Mode. */
 	void RegisterEnemy( AFTBasePawn* NewEnemy );
 
 protected:
@@ -27,22 +27,23 @@ protected:
 	//~ End AGameModeBase Interface
 
 private:
-	/** Callback for (Enemy) OnPawnDied Delegate */
+    /** Callback bound to an enemy OnPawnDied delegate. */
 	UFUNCTION()
 	void HandleEnemyDied( AFTBasePawn* DeadEnemy );
 
-	/** Callback for (Player) OnPawnDied Delegate */
+    /** Callback bound to the player OnPawnDied delegate. */
 	UFUNCTION()
 	void HandlePlayerDeath( AFTBasePawn* DeadPlayer );
 
 	/**
-	 * Handle End of the game
-	 * @param bPlayerWon Information if the Player won or lost
+	 * Triggers the end of the game and handles the win/loss state.
+	 * @param bPlayerWon True if the player won, false if they lost.
 	 */
 	void EndGame( const bool bPlayerWon );
 
+	/** The current count of living enemies, managed by this Game Mode. */
 	int32 AliveEnemies = 0;
 
-	/** To prevent multiple calls of EndGame */
+    /** Flag to prevent EndGame from being called multiple times. */
 	bool bIsGameOver = false;
 };

@@ -11,7 +11,6 @@ class UUserWidget;
 /**
  * Game Instance class for this project
  * Stores classes for UI widgets used in the game
- * TODO: Add some checks for if the Subclasses are filled
  */
 UCLASS()
 class FORBIDDENTASK_API UFTGameInstance : public UGameInstance
@@ -34,4 +33,9 @@ public:
 	/** Display Win/Lose, Play Again, Back to the Main Menu */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UUserWidget> EndScreenWidgetClass;
+
+protected:
+	//~ Begin UGameInstance Interface
+	virtual void Init() override;
+	//~ Begin UGameInstance Interface
 };

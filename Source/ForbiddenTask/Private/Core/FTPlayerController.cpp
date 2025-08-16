@@ -21,6 +21,7 @@ void AFTPlayerController::ShowEndScreen( const bool bPlayerWon )
 		SetPause( true );
 
 		SetInputMode( FInputModeUIOnly() );
+		bShowMouseCursor = true;
 	}
 }
 
@@ -101,7 +102,7 @@ void AFTPlayerController::HandlePause()
 		return;
 	}
 	
-	PauseMenu = CreateWidget<UUserWidget>( this, GameInstance->PauseMenuWidgetClass );
+	PauseMenu = CreateWidget<UUserWidget>( this, GetGameInstance()->PauseMenuWidgetClass );
 	if ( !PauseMenu )
 	{
 		FT_LOG_ERROR( TEXT("Failed to create Pause Menu Widget") );
@@ -131,13 +132,13 @@ void AFTPlayerController::HandleUnpause()
 
 UFTGameInstance* AFTPlayerController::GetGameInstance()
 {
-	if ( !GameInstance )
+	if ( !CachedGameInstance )
 	{
-		GameInstance = Cast<UFTGameInstance>( GetWorld()->GetGameInstance() );
-		if ( !GameInstance )
+		CachedGameInstance = Cast<UFTGameInstance>( GetWorld()->GetGameInstance() );
+		if ( !CachedGameInstance )
 		{
 			FT_LOG_ERROR( TEXT("Game Instance is invalid!") );
 		}
 	}
-	return GameInstance;
+	return CachedGameInstance;
 }

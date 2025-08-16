@@ -7,9 +7,10 @@
 #include "FTHUD.generated.h"
 
 class UFTHUDWidget;
+
 /**
- * A base HUD class for Forbidden Task Project
- * Handles creation of HUDWidget
+ * A base HUD class for Forbidden Task Project.
+ * Handles creation of HUDWidget.
  */
 UCLASS()
 class FORBIDDENTASK_API AFTHUD : public AHUD

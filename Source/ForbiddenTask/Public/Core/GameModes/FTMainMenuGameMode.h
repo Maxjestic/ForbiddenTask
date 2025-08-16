@@ -7,8 +7,8 @@
 #include "FTMainMenuGameMode.generated.h"
 
 /**
- * Game Mode class for Main Menu
- * Without Any logic
+ * Game Mode for the Main Menu level.
+ * Sets simple defaults to ensure no core gameplay logic is run.
  */
 UCLASS()
 class FORBIDDENTASK_API AFTMainMenuGameMode : public AGameModeBase
