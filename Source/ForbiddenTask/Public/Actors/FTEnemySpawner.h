@@ -13,24 +13,15 @@ class UFTSpawnConfigDataAsset;
 UENUM( BlueprintType )
 enum class EFTSpawnerType : uint8
 {
-	/**
-	 * Uses radius to define area for spawning
-	 * Number of Enemies and provided Enemy Types with weight to spawn Enemies
-	 * Curves for distance - power relation.
-	 */
+	/** Uses Actor properties to spawn enemies in a radius with curve-based Stat scaling. */
 	Normal,
-	/**
-	 * Uses DataAsset for ring-like areas around the spawn center point
-	 * Data from DataAsset is used for Enemy spawning details (Power, chance of spawning, types, etc.)
-	 */
+	/** Uses a Data Asset to define rings for spawning. */
 	DataAsset,
 };
 
 /**
- * Class for EnemySpawner
- * Spawns enemies around Player 
- * Values in Properties (Normal Mode)
- * Values from DataAsset (DataAsset Mode)
+ * Spawns a wave of enemies at the start of the game, centered on the player location.
+ * Can operate in two modes: a simple Normal mode and a more complex DataAsset mode.
  */
 UCLASS()
 class FORBIDDENTASK_API AFTEnemySpawner : public AActor
@@ -38,10 +29,7 @@ class FORBIDDENTASK_API AFTEnemySpawner : public AActor
 	GENERATED_BODY()
 
 public:
-	/**
-	 * Default Constructor
-	 * Sets tick
-	 */
+	/** Sets default values. */
 	AFTEnemySpawner();
 
 protected:
@@ -49,97 +37,97 @@ protected:
 	virtual void BeginPlay() override;
 	//~ Begin AActor Interface
 
-	/**
-	 * Type of spawner
-	 * Normal - Uses radius and common data for the whole area
-	 * DataAsset - Uses data specified in DataAsset
-	 */
+	/** Determines the spawning method to use. */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning" )
 	EFTSpawnerType SpawnerType = EFTSpawnerType::Normal;
 
-	/**
-	 * Used to prevent enemies spawning on the Player
-	 */
+	/** The minimum distance from the spawn center where enemies can be spawned. */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning", meta = (ClampMin = "0.0") )
-	float RadiusThreshold = 100.f;
+	float InnerRadiusThreshold = 100.f;
 
-	/**
-	 * The total number of enemies to spawn, used only for Non-DataAsset Mode
-	 */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode", meta = (ClampMin = "0") )
+	// --- Normal Mode Properties ---
+
+	/** The total number of enemies to spawn. */
+	UPROPERTY( EditAnywhere,
+		BlueprintReadOnly,
+		Category = "Spawning|Normal Mode",
+		meta = (ClampMin = "0", EditCondition = "SpawnerType == EFTSpawnerType::Normal") )
 	int32 TotalEnemiesToSpawn = 1;
 
-	/**
-	 * Max spawn distance from the player
-	 */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode", meta = (ClampMin = "0.0") )
-	float SpawnRadius = 3000.0f;
+	/** The maximum distance from the spawn center where enemies can be spawned. */
+	UPROPERTY( EditAnywhere,
+		BlueprintReadOnly,
+		Category = "Spawning|Normal Mode",
+		meta = (ClampMin = "0.0", EditCondition = "SpawnerType == EFTSpawnerType::Normal") )
+	float OuterSpawnRadius = 3000.0f;
 
-	/**
-	 * The list of possible enemy types to spawn with weight
-	 */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode" )
+	/** The list of possible enemy types to spawn with weights. */
+	UPROPERTY( EditAnywhere,
+		BlueprintReadOnly,
+		Category = "Spawning|Normal Mode",
+		meta = ( EditCondition = "SpawnerType == EFTSpawnerType::Normal") )
 	TArray<FFTEnemySpawnInfo> EnemySpawnInfos;
 
-	// --- Curve assets for stat scaling --- //
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode" )
+	/** A curve that maps the distance from the player to the enemy Strength. */
+	UPROPERTY( EditAnywhere,
+		BlueprintReadOnly,
+		Category = "Spawning|Normal Mode",
+		meta = ( EditCondition = "SpawnerType == EFTSpawnerType::Normal") )
 	TObjectPtr<UCurveFloat> StrengthOverDistanceCurve;
 
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|Normal Mode" )
+	/** A curve that maps the distance from the player to the enemy Speed. */
+	UPROPERTY( EditAnywhere,
+		BlueprintReadOnly,
+		Category = "Spawning|Normal Mode",
+		meta = ( EditCondition = "SpawnerType == EFTSpawnerType::Normal") )
 	TObjectPtr<UCurveFloat> SpeedOverDistanceCurve;
 
-	/**
-	 * Used for DataAsset Mode
-	 */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Spawning|DataAsset Mode" )
+	// --- DataAsset Mode Properties ---
+
+	/** The configuration asset that defines the spawning zones and rules. */
+	UPROPERTY( EditAnywhere,
+		BlueprintReadOnly,
+		Category = "Spawning|DataAsset Mode",
+		meta = ( EditCondition = "SpawnerType == EFTSpawnerType::DataAsset") )
 	TObjectPtr<UFTSpawnConfigDataAsset> SpawnConfig;
 
 private:
-	/**
-	 * Tries to find the Player and get its position in World Space
-	 * @return True - Success, False - Failed
-	 */
+	/** Finds the player and sets the initial PlayerPosition. Returns false if the player could not be found. */
 	bool TryInitializePlayerPosition();
 
-	/**
-	 * Called if Spawner Mode is set to Normal
-	 * Uses random position in a given radius and Curves for Stats
-	 */
+	/** Spawns enemies using data from the 'Normal Mode' category. */
 	void SpawningNormalMode() const;
 
-	/**
-	 * Called if Spawner Mode is set to DataAsset
-	 * Uses DataAsset with values for each ring in a spawning zone
-	 */
+	/** Spawns enemies using data from the 'DataAsset Mode' category. */
 	void SpawningDataAssetMode() const;
 
 	/**
-	 * Picks random Enemy Class based on set Weights
-	 * @param InEnemySpawnInfos Array of all EnemySpawnInfo considered
-	 * @return Random Class of picked enemy type
+	 * Selects an enemy class from a weighted list.
+	 * @param InEnemySpawnInfos The list of enemy types and their weights.
+	 * @return The chosen enemy class to spawn.
 	 */
 	static TSubclassOf<AFTEnemyPawn> PickRandomEnemyType( const TArray<FFTEnemySpawnInfo>& InEnemySpawnInfos );
 
 	/**
-	 * Picks random spawn location
-	 * @param RandomDistance Random distance from Player position for spawn
-	 * @return Random location in a given radius
+	 * Calculates a random spawn location
+	 * @param RandomDistance Random distance from the spawn center
+	 * @return Random Vector in the given distance
 	 */
 	FVector PickRandomSpawnLocation( const float RandomDistance ) const;
 
 	/**
-	 * Spawns Enemy and sets its Stats
-	 * @param EnemyClass Type of Enemy to spawn
-	 * @param SpawnLocation Location for spawn
-	 * @param Strength for the Enemy
-	 * @param Speed for the Enemy
-	 * @param GameMode used to register Enemy
-	 * @return if spawning was successful
+	 * Spawns a single enemy and configures it.
+	 * @param EnemyClass The class of enemy to spawn.
+	 * @param SpawnLocation The world location for the spawn.
+	 * @param Strength The strength value for the new enemy.
+	 * @param Speed The speed value for the new enemy.
+	 * @param GameMode A reference to the current Game Mode to register the enemy with.
 	 */
 	bool TrySpawnEnemy( const TSubclassOf<AFTEnemyPawn>& EnemyClass, const FVector& SpawnLocation,
-	                 const float Strength,
-	                 const float Speed, AFTGameMode* GameMode ) const;
+	                    const float Strength,
+	                    const float Speed, AFTGameMode* GameMode ) const;
 
+	/** The cached world position of the player at the moment spawning begins. */
 	FVector PlayerPosition = FVector::ZeroVector;
 
 #if WITH_EDITOR

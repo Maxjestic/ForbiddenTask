@@ -7,18 +7,20 @@
 #include "FTBTDecorator_CompareStrength.generated.h"
 
 /**
- * Defines compare logic modes for decorator
+ * Defines comparison logic for the strength decorator.
  */
 UENUM( BlueprintType )
 enum class EFTDecoratorCompareMode : uint8
 {
+	/** Condition passes if AI Strength is less than or equal to Player Strength. */
 	LessEqual,
+	/** Condition passes if AI Strength is greater than Player Strength. */
 	Greater
 };
 
 /**
- * Behavior Tree Decorator for strength check
- * Define Compare Mode
+ * Compares the Strength of the AI pawn against the player's Strength.
+ * The exact comparison logic is defined by the CompareMode enum.
  */
 UCLASS()
 class FORBIDDENTASK_API UFTBTDecorator_CompareStrength : public UBTDecorator
@@ -26,10 +28,7 @@ class FORBIDDENTASK_API UFTBTDecorator_CompareStrength : public UBTDecorator
 	GENERATED_BODY()
 	
 public:	
-	/**
-	 * Default Constructor
-	 * Sets Node Name
-	 */
+	/** Sets the default node name */
 	UFTBTDecorator_CompareStrength();
 	
 protected:
@@ -41,14 +40,11 @@ protected:
 	virtual bool CalculateRawConditionValue( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory ) const override;
 	//~ End UBTDecorator Interface
 
-	/** Blackboard Key to avoid using string literals */
+    /** The Blackboard key for the Player Pawn to compare against. */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Blackboard" )
 	FBlackboardKeySelector PlayerPawnKey;
 
-	/**
-	 * Defines how the result will be calculated
-	 * AI [LessEqual/Greater] Player
-	 */
+	/** Defines how the AI strength is compared to the player. */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Compare" )
 	EFTDecoratorCompareMode CompareMode = EFTDecoratorCompareMode::LessEqual;
 };

@@ -9,7 +9,7 @@
 
 UFTBTDecorator_CompareStrength::UFTBTDecorator_CompareStrength()
 {
-	NodeName = TEXT( "Compare My and the Player Strength" );
+	NodeName = TEXT( "Compare Strength" );
 }
 
 FString UFTBTDecorator_CompareStrength::GetStaticDescription() const
