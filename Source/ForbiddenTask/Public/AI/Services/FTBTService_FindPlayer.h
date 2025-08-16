@@ -16,16 +16,17 @@ class FORBIDDENTASK_API UFTBTService_FindPlayer : public UBTService
 
 public:
 	/**
-	 * Default constructor
-	 * Sets node name
+	 * Default Constructor
+	 * Sets Node Name
 	 */
 	UFTBTService_FindPlayer();
 
 protected:
-	//~ Begin UBTAuxiliaryNode
+	//~ Begin UBTAuxiliaryNode Interface
 	virtual void TickNode( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds ) override;
-	//~ End UBTAuxiliaryNode
+	//~ End UBTAuxiliaryNode Interface
 
+	/** Blackboard Key to avoid using string literals */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "Blackboard" )
 	FBlackboardKeySelector PlayerPawnKey;
 };

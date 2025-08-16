@@ -5,7 +5,14 @@
 
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "ForbiddenTask/FTLogChannels.h"
 #include "Pawns/FTBasePawn.h"
+
+UFTBTTask_HandleAwareMovement::UFTBTTask_HandleAwareMovement()
+{
+	NodeName = TEXT( "Handle Aware of the Player Movement" );
+	bNotifyTick = true;
+}
 
 FString UFTBTTask_HandleAwareMovement::GetStaticDescription() const
 {
@@ -16,43 +23,57 @@ FString UFTBTTask_HandleAwareMovement::GetStaticDescription() const
 	case EFTAwareMovementMode::Chase:
 		return FString::Printf( TEXT( "Chase the Player" ) );
 	default:
-		return FString::Printf( TEXT( "Unknown" ) );
+		return FString::Printf( TEXT( "Unknown!" ) );
 	}
 }
 
 EBTNodeResult::Type UFTBTTask_HandleAwareMovement::ExecuteTask( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory )
 {
+	return EBTNodeResult::InProgress;
+}
+
+void UFTBTTask_HandleAwareMovement::TickTask( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds )
+{
+	Super::TickTask( OwnerComp, NodeMemory, DeltaSeconds );
+
 	const AAIController* AIController = OwnerComp.GetAIOwner();
 	if ( !AIController )
 	{
-		return EBTNodeResult::Failed;
+		FT_LOG_WARNING( TEXT("AIController nullptr!") )
+		FinishLatentTask( OwnerComp, EBTNodeResult::Failed );
+		return;
 	}
 
 	AFTBasePawn* AIPawn = Cast<AFTBasePawn>( AIController->GetPawn() );
 	if ( !AIPawn )
 	{
-		return EBTNodeResult::Failed;
+		FT_LOG_WARNING( TEXT("AIPawn nullptr!") )
+		FinishLatentTask( OwnerComp, EBTNodeResult::Failed );
+		return;
 	}
 
 	const AFTBasePawn* PlayerPawn = Cast<AFTBasePawn>(
 		OwnerComp.GetBlackboardComponent()->GetValueAsObject( PlayerPawnKey.SelectedKeyName ) );
 	if ( !PlayerPawn )
 	{
-		return EBTNodeResult::Failed;
+		FT_LOG_WARNING( TEXT("PlayerPawn nullptr!") )
+		FinishLatentTask( OwnerComp, EBTNodeResult::Failed );
+		return;
 	}
 
-	FVector MovementDirection;
+	FVector MovementVector;
 	switch ( AwareMovementMode )
 	{
 	case EFTAwareMovementMode::Flee:
-		MovementDirection = ( AIPawn->GetActorLocation() - PlayerPawn->GetActorLocation() ).GetSafeNormal2D();
+		MovementVector = ( AIPawn->GetActorLocation() - PlayerPawn->GetActorLocation() );
 		break;
 	case EFTAwareMovementMode::Chase:
-		MovementDirection = ( PlayerPawn->GetActorLocation() - AIPawn->GetActorLocation() ).GetSafeNormal2D();
+		MovementVector = ( PlayerPawn->GetActorLocation() - AIPawn->GetActorLocation() );
 		break;
 	default:
-		return EBTNodeResult::Failed;
+		FT_LOG_WARNING( TEXT("Unknown AwareMovementMode!") )
+		FinishLatentTask( OwnerComp, EBTNodeResult::Failed );
+		return;
 	}
-	AIPawn->HandleMovement( MovementDirection );
-	return EBTNodeResult::Succeeded;
+	AIPawn->HandleMovement( MovementVector.GetSafeNormal2D() );
 }

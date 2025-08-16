@@ -25,6 +25,13 @@ class FORBIDDENTASK_API UFTBTTask_HandleAwareMovement : public UBTTask_Blueprint
 {
 	GENERATED_BODY()
 
+public:
+	/**
+	 * Default Constructor
+	 * Sets Node Name
+	 */
+	UFTBTTask_HandleAwareMovement();
+
 protected:
 	//~ Begin UBTNode Interface	
 	virtual FString GetStaticDescription() const override;
@@ -32,6 +39,7 @@ protected:
 
 	//~ Begin UBTTask_BlueprintBase Interface
 	virtual EBTNodeResult::Type ExecuteTask( UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory ) override;
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 	//~ End UBTTask_BlueprintBase Interface
 
 	/** Blackboard Key to avoid using string literals */

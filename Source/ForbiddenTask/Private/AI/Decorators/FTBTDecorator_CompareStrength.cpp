@@ -7,6 +7,11 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Pawns/FTBasePawn.h"
 
+UFTBTDecorator_CompareStrength::UFTBTDecorator_CompareStrength()
+{
+	NodeName = TEXT( "Compare My and the Player Strength" );
+}
+
 FString UFTBTDecorator_CompareStrength::GetStaticDescription() const
 {
 	switch ( CompareMode )

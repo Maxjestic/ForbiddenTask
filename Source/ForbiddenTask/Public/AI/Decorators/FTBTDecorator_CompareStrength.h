@@ -24,7 +24,14 @@ UCLASS()
 class FORBIDDENTASK_API UFTBTDecorator_CompareStrength : public UBTDecorator
 {
 	GENERATED_BODY()
-
+	
+public:	
+	/**
+	 * Default Constructor
+	 * Sets Node Name
+	 */
+	UFTBTDecorator_CompareStrength();
+	
 protected:
 	//~ Begin UBTNode Interface	
 	virtual FString GetStaticDescription() const override;

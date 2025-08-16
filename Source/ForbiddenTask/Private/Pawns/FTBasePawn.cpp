@@ -3,6 +3,7 @@
 #include "Pawns/FTBasePawn.h"
 
 #include "Components/SphereComponent.h"
+#include "ForbiddenTask/FTLogChannels.h"
 
 AFTBasePawn::AFTBasePawn()
 {
@@ -34,6 +35,7 @@ void AFTBasePawn::SetStats( const float NewStrength, const float NewSpeed )
 
 void AFTBasePawn::HandleMovement( const FVector& ForceDirection )
 {
+	FT_LOG_WARNING( TEXT("DirVector: %s, DirLength: %f"), *ForceDirection.ToString(), ForceDirection.Size() )
 	SphereCollider->AddForce( ForceDirection * ( SpeedCoefficient / ( BaseScale + Strength ) ) * Speed );
 }
 
