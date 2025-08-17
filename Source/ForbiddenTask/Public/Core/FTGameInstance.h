@@ -19,20 +19,24 @@ class FORBIDDENTASK_API UFTGameInstance : public UGameInstance
 
 public:
 	/** Play, Exit - simple logic */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "UI" )
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
 
 	/** Bars representing Speed and Strength */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "UI" )
 	TSubclassOf<UUserWidget> HUDWidgetClass;
 
 	/** Continue, Back to the Main Menu, pause gameplay */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "UI" )
 	TSubclassOf<UUserWidget> PauseMenuWidgetClass;
 
 	/** Display Win/Lose, Play Again, Back to the Main Menu */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "UI" )
 	TSubclassOf<UUserWidget> EndScreenWidgetClass;
+	
+	/** Menu for cheats */
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "Cheats" )
+	TSubclassOf<UUserWidget> CheatMenuWidgetClass;
 
 protected:
 	//~ Begin UGameInstance Interface

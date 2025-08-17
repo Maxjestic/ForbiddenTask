@@ -67,12 +67,10 @@ void UFTCheatManager::ToggleFreezeEnemies()
 		if ( bAreEnemiesFrozen )
 		{
 			Brain->RestartLogic();
-			//Enemy->CustomTimeDilation = 1.f;
 		}
 		else
 		{
 			Brain->StopLogic( TEXT( "Frozen by cheat." ) );
-			//Enemy->CustomTimeDilation = 0.f;
 		}
 	}
 	bAreEnemiesFrozen = !bAreEnemiesFrozen;
