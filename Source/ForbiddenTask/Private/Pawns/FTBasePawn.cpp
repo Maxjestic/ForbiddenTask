@@ -29,10 +29,9 @@ void AFTBasePawn::SetStats( const float NewStrength, const float NewSpeed )
 {
 	Strength = FMath::Max( 0.f, NewStrength );
 	Speed = FMath::Max( 0.f, NewSpeed );
-	UpdateSize();
 }
 
-void AFTBasePawn::HandleMovement( const FVector& ForceDirection )
+void AFTBasePawn::HandleMovement( const FVector& ForceDirection ) const
 {
 	SphereCollider->AddForce( ForceDirection * ( SpeedCoefficient / ( BaseScale + Strength ) ) * Speed );
 }

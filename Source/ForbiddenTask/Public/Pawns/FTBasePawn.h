@@ -24,10 +24,10 @@ public:
 	AFTBasePawn();
 
 	/** Applies a continuous force based on the pawn's speed and the provided direction. */
-	virtual void HandleMovement( const FVector& ForceDirection );
+	void HandleMovement( const FVector& ForceDirection ) const;
 
-	/** Sets both Strength and Speed and handles any resulting state changes. */
-	void SetStats( const float NewStrength, const float NewSpeed );
+	/** Sets both Strength and Speed. Any extra logic should be implemented in child classes. */
+	virtual void SetStats( const float NewStrength, const float NewSpeed );
 
 	UFUNCTION( BlueprintPure, Category = "Stats" )
 	FORCEINLINE float GetStrength() const { return Strength; };

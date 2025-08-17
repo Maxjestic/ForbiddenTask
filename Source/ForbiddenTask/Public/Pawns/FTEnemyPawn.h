@@ -25,6 +25,10 @@ public:
 	 * Sets Collision Profile
 	 */
 	AFTEnemyPawn();
+
+	//~ Begin AFTBasePawn Interface
+	virtual void SetStats(const float NewStrength, const float NewSpeed) override;
+	//~ End AFTBasePawn Interface
 	
 	//~ Begin IFTConsumable Interface
 

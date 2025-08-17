@@ -9,6 +9,12 @@ AFTEnemyPawn::AFTEnemyPawn()
 	SphereCollider->SetCollisionProfileName( "Enemy" );
 }
 
+void AFTEnemyPawn::SetStats( const float NewStrength, const float NewSpeed )
+{
+	Super::SetStats( NewStrength, NewSpeed );
+	UpdateSize();
+}
+
 void AFTEnemyPawn::AttemptToConsume_Implementation( AFTPlayerPawn* PlayerPawn )
 {
 	// Helps to find Blueprints that don't override this function

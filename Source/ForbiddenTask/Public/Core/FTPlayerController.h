@@ -21,6 +21,9 @@ class FORBIDDENTASK_API AFTPlayerController : public APlayerController
 	GENERATED_BODY()
 
 public:
+	/** Sets Cheat Manager Class */
+	AFTPlayerController();
+	
     /** Creates and displays the end-game UI widget. Called by the GameMode. */
 	void ShowEndScreen(const bool bPlayerWon);
 	

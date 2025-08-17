@@ -25,17 +25,29 @@ public:
 	/** Sets up player-specific components and default values. */
 	AFTPlayerPawn();
 
+	//~ Begin AFTBasePawn Interface
+	virtual void SetStats( const float NewStrength, const float NewSpeed ) override;
+	//~ End AFTBasePawn Interface
+
+	/** Adds a Value to the Speed Stat. Only values > 0 will work */
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void AddSpeed( const float Value );
 
+	/** Adds a Value to the Strength Stat. Only values > 0 will work */
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void AddStrength( const float Value );
 
+	/** Subtracts a Value from the Speed Stat. Only values > 0 will work */
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void SubtractSpeed( const float Value );
 
+	/** Subtracts a Value from the Strength Stat. Only values > 0 will work */
 	UFUNCTION( BlueprintCallable, Category = "Stats" )
 	void SubtractStrength( const float Value );
+
+	/** Alters Stats with DeltaValues */
+	UFUNCTION( BlueprintCallable, Category = "Stats" )
+	void AlterStats( const float StrengthDelta, const float SpeedDelta );
 
 	UFUNCTION( BLueprintPure, Category = "Stats" )
 	FORCEINLINE float GetMaxStrength() const { return MaxStrength; };
@@ -78,4 +90,19 @@ private:
 
 	/** To ensure death broadcast only happens once. */
 	bool bIsAlive = true;
+
+	// --- Cheats ---
+public:
+	/** Toggles God Mode and returns a new state. */
+	bool ToggleGodMode();
+
+	/** Kills the player. */
+	void KillPlayer();
+
+private:
+	/** Alters Stats with DeltaValues when God Mode is active */
+	void GodModeAlterStats( const float StrengthDelta, const float SpeedDelta );
+
+	/** Current God Mode state. */
+	bool bIsGodMode = false;
 };

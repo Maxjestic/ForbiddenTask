@@ -27,28 +27,57 @@ AFTPlayerPawn::AFTPlayerPawn()
 	Camera->SetOrthoWidth( 4000.f );
 }
 
+void AFTPlayerPawn::SetStats( const float NewStrength, const float NewSpeed )
+{
+	Super::SetStats( NewStrength, NewSpeed );
+	SpeedCheck();
+	StrengthCheck();
+}
+
 void AFTPlayerPawn::AddSpeed( const float Value )
 {
-	Speed += Value;
+	Speed += FMath::Max( Value, 0.f );
 	SpeedCheck();
 }
 
 void AFTPlayerPawn::AddStrength( const float Value )
 {
-	Strength += Value;
+	Strength += FMath::Max( Value, 0.f );
 	StrengthCheck();
 }
 
 void AFTPlayerPawn::SubtractSpeed( const float Value )
 {
-	Speed -= Value;
+	if ( bIsGodMode )
+	{
+		return;
+	}
+	Speed -= FMath::Max( Value, 0.f );
 	SpeedCheck();
 }
 
 void AFTPlayerPawn::SubtractStrength( const float Value )
 {
-	Strength -= Value;
+	if ( bIsGodMode )
+	{
+		return;
+	}
+	Strength -= FMath::Max( Value, 0.f );
 	StrengthCheck();
+}
+
+void AFTPlayerPawn::AlterStats( const float StrengthDelta, const float SpeedDelta )
+{
+	if ( bIsGodMode )
+	{
+		GodModeAlterStats(StrengthDelta, SpeedDelta);
+		return;
+	}
+
+	Strength += StrengthDelta;
+	Speed += SpeedDelta;
+	StrengthCheck();
+	SpeedCheck();
 }
 
 void AFTPlayerPawn::OnBeginOverlap( UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -83,5 +112,39 @@ void AFTPlayerPawn::SpeedCheck()
 		bIsAlive = false;
 		FT_LOG_WARNING( TEXT("Player Pawn '%s' has died."), *GetName() );
 		OnPawnDied.Broadcast( this );
+	}
+}
+
+bool AFTPlayerPawn::ToggleGodMode()
+{
+	bIsGodMode = !bIsGodMode;
+	return bIsGodMode;
+}
+
+void AFTPlayerPawn::KillPlayer()
+{
+	bIsAlive = false;
+	OnPawnDied.Broadcast( this );
+}
+
+void AFTPlayerPawn::GodModeAlterStats( const float StrengthDelta, const float SpeedDelta )
+{
+	if ( StrengthDelta > 0.f )
+	{
+		Strength += StrengthDelta;
+		StrengthCheck();
+	}
+	else
+	{
+		FT_LOG_WARNING( TEXT("God Mode active, strength not changed.") );
+	}
+	if ( SpeedDelta > 0.f )
+	{
+		Speed += SpeedDelta;
+		SpeedCheck();
+	}
+	else
+	{
+		FT_LOG_WARNING( TEXT("God Mode active, speed not changed.") );
 	}
 }

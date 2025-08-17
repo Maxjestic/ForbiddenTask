@@ -4,11 +4,17 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Cheats/FTCheatManager.h"
 #include "Core/FTGameInstance.h"
 #include "ForbiddenTask/FTLogChannels.h"
 #include "Pawns/FTPlayerPawn.h"
 #include "UI/FTEndGameWidget.h"
 #include "UI/FTHUDWidget.h"
+
+AFTPlayerController::AFTPlayerController()
+{
+	CheatClass = UFTCheatManager::StaticClass();
+}
 
 void AFTPlayerController::ShowEndScreen( const bool bPlayerWon )
 {
