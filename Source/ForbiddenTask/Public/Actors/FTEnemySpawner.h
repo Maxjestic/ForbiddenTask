@@ -23,7 +23,7 @@ enum class EFTSpawnerType : uint8
  * Spawns a wave of enemies at the start of the game, centered on the player location.
  * Can operate in two modes: a simple Normal mode and a more complex DataAsset mode.
  */
-UCLASS()
+UCLASS( NotPlaceable )
 class FORBIDDENTASK_API AFTEnemySpawner : public AActor
 {
 	GENERATED_BODY()

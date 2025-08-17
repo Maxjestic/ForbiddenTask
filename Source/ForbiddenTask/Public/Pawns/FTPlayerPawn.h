@@ -16,7 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnPlayerStatChanged, float, NewVal
  * Provides functionality for player movement, collision and altering stats.
  * And Lose condition
  */
-UCLASS( Blueprintable )
+UCLASS( Blueprintable, NotPlaceable )
 class FORBIDDENTASK_API AFTPlayerPawn : public AFTBasePawn
 {
 	GENERATED_BODY()

@@ -15,7 +15,7 @@ class UInputMappingContext;
  * The primary PlayerController for the game.
  * Handles player input for movement and UI interactions like pausing.
  */
-UCLASS()
+UCLASS(NotPlaceable)
 class FORBIDDENTASK_API AFTPlayerController : public APlayerController
 {
 	GENERATED_BODY()

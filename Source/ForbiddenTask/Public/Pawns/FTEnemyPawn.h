@@ -14,7 +14,7 @@
  * This class defines behavior for enemy pawns that can be "consumed" by player pawns.
  * It contains stats related to the benefits or penalties it provides upon consumption.
  */
-UCLASS( Blueprintable )
+UCLASS( Blueprintable, NotPlaceable )
 class FORBIDDENTASK_API AFTEnemyPawn : public AFTBasePawn, public IFTConsumable
 {
 	GENERATED_BODY()
