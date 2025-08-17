@@ -11,7 +11,7 @@ This section outlines the main C++ architecture.
 ### Pawn Architecture
 
 The core pawn logic is built on a simple inheritance structure:
-* **`AFTBasePawn`**: The abstract base class for all pawns. It handles shared logic for physics-based movement (`HandleMovement`), stats (`Strength`, `Speed`), and size scaling (`UpdateSize`).
+* **`AFTBasePawn`**: The abstract base class for all pawns. It handles shared logic for physics-based movement (`HandleMovement`), stats (`Strength`, `Speed`), and size scaling (`UpdateSize`). **Note: The movement force is calculated using both the `Speed` and `Strength` stats, making stronger pawns slightly slower and heavier.**
 * **`AFTPlayerPawn`**: Inherits from `BasePawn` and adds player-specific logic, including the camera, input handling, and delegates (`OnStrengthChanged`, `OnSpeedChanged`) for UI updates.
 * **`AFTEnemyPawn`**: Inherits from `BasePawn` and implements the `IFTConsumable` interface, allowing it to be consumed by the player.
 
