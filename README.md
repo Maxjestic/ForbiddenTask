@@ -65,9 +65,24 @@ This section explains how to use the C++ systems in the Unreal Editor.
 
 ### How to Configure the UI
 
-* All UI widget Blueprints (Main Menu, HUD, Pause Menu, End Screen) are assigned in a single, central location: your **`BP_FTGameInstance`** asset. Open this asset to change which widget is used for each part of the game.
+* All UI widget Blueprints (Main Menu, HUD, Pause Menu, End Screen, Cheats Menu) are assigned in a single, central location: your **`BP_FTGameInstance`** asset. Open this asset to change which widget is used for each part of the game.
 
----
----
+## Cheats and Debug Tools
 
-A `README` file like this saves your team countless hours of questions and makes your project truly professional and easy to work with.
+The project includes a cheat system to make testing and debugging easier. These cheats can be accessed in two ways.
+
+### How to Access
+
+* **Console:** In-game, open the console window, then type in the desired command.
+* **Debug Widget:** Press the **`1`** key to toggle the graphical cheat menu.
+
+### Available Commands
+
+| Command | Parameters | Description |
+| :--- | :--- | :--- |
+| `God` | None | Toggles God Mode for the player. While active, the player will not lose strength or speed from consuming enemies. |
+| `KillPlayer` | None | Instantly kills the player, triggering the loss condition. |
+| `KillAllEnemies` | None | Destroys all currently active enemies, triggering the win condition. |
+| `ToggleFreezeEnemies`| None | Toggles the frozen state for all enemies by stopping/restarting their Brain. |
+| `SetPlayerStats` | `NewStrength` `NewSpeed` | Sets the player's stats to specific absolute values. Example: `SetPlayerStats 3 2` |
+| `AlterPlayerStats` | `StrengthDelta` `SpeedDelta`| Adds or subtracts from the player's current stats. Use negative numbers to subtract. Example: `AlterPlayerStats -2 1` |
