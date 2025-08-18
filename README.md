@@ -52,7 +52,7 @@ This section explains how to use the C++ systems in the Unreal Editor.
 
 ### How to Configure Spawning
 
-1.  Place an **`AFTEnemySpawner`** actor in your level.
+1.  Place an **`BP_EnemySpawner`** actor in your level.
 2.  In its **Details** panel, choose a **`Spawner Type`**.
 3.  **If `Normal`:**
     * Set the `Total Enemies To Spawn` and the `Outer Spawn Radius`.
